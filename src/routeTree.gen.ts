@@ -9,61 +9,205 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as TabsRouteImport } from './routes/_tabs'
+import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
+import { Route as DoctorIdRouteImport } from './routes/doctor.$id'
+import { Route as TabsLabTestsRouteImport } from './routes/_tabs.lab-tests'
+import { Route as TabsHospitalsRouteImport } from './routes/_tabs.hospitals'
+import { Route as TabsFindDoctorsRouteImport } from './routes/_tabs.find-doctors'
+import { Route as TabsClinicsRouteImport } from './routes/_tabs.clinics'
+import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
 
-const IndexRoute = IndexRouteImport.update({
+const TabsRoute = TabsRouteImport.update({
+  id: '/_tabs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TabsIndexRoute = TabsIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => TabsRoute,
+} as any)
+const DoctorIdRoute = DoctorIdRouteImport.update({
+  id: '/doctor/$id',
+  path: '/doctor/$id',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TabsLabTestsRoute = TabsLabTestsRouteImport.update({
+  id: '/lab-tests',
+  path: '/lab-tests',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsHospitalsRoute = TabsHospitalsRouteImport.update({
+  id: '/hospitals',
+  path: '/hospitals',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsFindDoctorsRoute = TabsFindDoctorsRouteImport.update({
+  id: '/find-doctors',
+  path: '/find-doctors',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsClinicsRoute = TabsClinicsRouteImport.update({
+  id: '/clinics',
+  path: '/clinics',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsAccountRoute = TabsAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => TabsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof TabsIndexRoute
+  '/account': typeof TabsAccountRoute
+  '/clinics': typeof TabsClinicsRoute
+  '/find-doctors': typeof TabsFindDoctorsRoute
+  '/hospitals': typeof TabsHospitalsRoute
+  '/lab-tests': typeof TabsLabTestsRoute
+  '/doctor/$id': typeof DoctorIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/account': typeof TabsAccountRoute
+  '/clinics': typeof TabsClinicsRoute
+  '/find-doctors': typeof TabsFindDoctorsRoute
+  '/hospitals': typeof TabsHospitalsRoute
+  '/lab-tests': typeof TabsLabTestsRoute
+  '/doctor/$id': typeof DoctorIdRoute
+  '/': typeof TabsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_tabs': typeof TabsRouteWithChildren
+  '/_tabs/account': typeof TabsAccountRoute
+  '/_tabs/clinics': typeof TabsClinicsRoute
+  '/_tabs/find-doctors': typeof TabsFindDoctorsRoute
+  '/_tabs/hospitals': typeof TabsHospitalsRoute
+  '/_tabs/lab-tests': typeof TabsLabTestsRoute
+  '/doctor/$id': typeof DoctorIdRoute
+  '/_tabs/': typeof TabsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/clinics'
+    | '/find-doctors'
+    | '/hospitals'
+    | '/lab-tests'
+    | '/doctor/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/account'
+    | '/clinics'
+    | '/find-doctors'
+    | '/hospitals'
+    | '/lab-tests'
+    | '/doctor/$id'
+    | '/'
+  id:
+    | '__root__'
+    | '/_tabs'
+    | '/_tabs/account'
+    | '/_tabs/clinics'
+    | '/_tabs/find-doctors'
+    | '/_tabs/hospitals'
+    | '/_tabs/lab-tests'
+    | '/doctor/$id'
+    | '/_tabs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  TabsRoute: typeof TabsRouteWithChildren
+  DoctorIdRoute: typeof DoctorIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_tabs': {
+      id: '/_tabs'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof TabsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_tabs/': {
+      id: '/_tabs/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof TabsIndexRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/doctor/$id': {
+      id: '/doctor/$id'
+      path: '/doctor/$id'
+      fullPath: '/doctor/$id'
+      preLoaderRoute: typeof DoctorIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_tabs/lab-tests': {
+      id: '/_tabs/lab-tests'
+      path: '/lab-tests'
+      fullPath: '/lab-tests'
+      preLoaderRoute: typeof TabsLabTestsRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/hospitals': {
+      id: '/_tabs/hospitals'
+      path: '/hospitals'
+      fullPath: '/hospitals'
+      preLoaderRoute: typeof TabsHospitalsRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/find-doctors': {
+      id: '/_tabs/find-doctors'
+      path: '/find-doctors'
+      fullPath: '/find-doctors'
+      preLoaderRoute: typeof TabsFindDoctorsRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/clinics': {
+      id: '/_tabs/clinics'
+      path: '/clinics'
+      fullPath: '/clinics'
+      preLoaderRoute: typeof TabsClinicsRouteImport
+      parentRoute: typeof TabsRoute
+    }
+    '/_tabs/account': {
+      id: '/_tabs/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof TabsAccountRouteImport
+      parentRoute: typeof TabsRoute
     }
   }
 }
 
+interface TabsRouteChildren {
+  TabsAccountRoute: typeof TabsAccountRoute
+  TabsClinicsRoute: typeof TabsClinicsRoute
+  TabsFindDoctorsRoute: typeof TabsFindDoctorsRoute
+  TabsHospitalsRoute: typeof TabsHospitalsRoute
+  TabsLabTestsRoute: typeof TabsLabTestsRoute
+  TabsIndexRoute: typeof TabsIndexRoute
+}
+
+const TabsRouteChildren: TabsRouteChildren = {
+  TabsAccountRoute: TabsAccountRoute,
+  TabsClinicsRoute: TabsClinicsRoute,
+  TabsFindDoctorsRoute: TabsFindDoctorsRoute,
+  TabsHospitalsRoute: TabsHospitalsRoute,
+  TabsLabTestsRoute: TabsLabTestsRoute,
+  TabsIndexRoute: TabsIndexRoute,
+}
+
+const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  TabsRoute: TabsRouteWithChildren,
+  DoctorIdRoute: DoctorIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
