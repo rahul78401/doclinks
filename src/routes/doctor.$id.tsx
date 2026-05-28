@@ -184,7 +184,7 @@ function DoctorDetail() {
 
           {/* Trust badges */}
           <div className="mt-4 flex flex-wrap gap-1.5">
-            {doctor.badges.map((b) => (
+            {doctor.badges.map((b: string) => (
               <TrustBadge key={b}>{b}</TrustBadge>
             ))}
             <TrustBadge primary>Top Rated in {doctor.city}</TrustBadge>
@@ -278,7 +278,7 @@ function DoctorDetail() {
           </h2>
         </div>
         <div className="flex gap-2 overflow-x-auto no-scrollbar px-5">
-          {doctor.treatments.map((t) => (
+          {doctor.treatments.map((t: string) => (
             <span
               key={t}
               className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-surface border border-border/60 px-3.5 py-2 text-[12px] font-semibold shadow-card"
