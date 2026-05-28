@@ -11,8 +11,9 @@ import {
   Wallet,
   MapPin,
   Languages,
-  Stethoscope,
   UserRound,
+  ShieldCheck,
+  Stethoscope,
 } from "lucide-react";
 import { doctors } from "@/lib/doctors";
 import { DoctorCard } from "@/components/DoctorCard";
@@ -21,7 +22,6 @@ import {
   LanguageSheet,
   LocationSheet,
   SPECIALTY_LIST,
-  SpecialtySheet,
   TreatmentSheet,
 } from "@/components/FilterSheets";
 
@@ -80,18 +80,22 @@ function FindDoctors() {
 
   return (
     <div className="pb-8">
-      <div className="px-5 pt-1 space-y-4">
-        <div>
-          <h1 className="text-[24px] font-display font-bold text-foreground">
-            Find Doctors
+      {/* Hero banner */}
+      <section className="relative mx-5 mt-1 overflow-hidden rounded-3xl bg-gradient-hero p-5 shadow-card">
+        <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-12 -left-8 h-32 w-32 rounded-full bg-primary-glow/20 blur-3xl pointer-events-none" />
+        <div className="relative">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-surface/80 backdrop-blur px-2.5 py-1 text-[10.5px] font-semibold text-primary border border-primary/15">
+            <ShieldCheck className="h-3 w-3" /> Verified by DocLinks
+          </span>
+          <h1 className="mt-3 text-[24px] leading-[1.15] font-display font-bold text-foreground text-balance">
+            Find the right doctor,<br />trusted and nearby.
           </h1>
-          <p className="text-[12.5px] text-muted-foreground">
+          <p className="mt-1.5 text-[12.5px] text-muted-foreground">
             {filtered.length} verified specialists in {location.split(",")[0]}
           </p>
-        </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex-1 flex items-center gap-2 bg-surface rounded-2xl border border-border/60 shadow-card pl-3.5 pr-2 py-2.5">
+          <div className="mt-4 flex items-center gap-2 bg-surface rounded-2xl border border-border/60 shadow-card pl-3.5 pr-2 py-2.5">
             <Search className="h-4 w-4 text-muted-foreground" />
             <input
               placeholder="Search doctors, specialties, treatments…"
@@ -104,8 +108,26 @@ function FindDoctors() {
               <Mic className="h-4 w-4" />
             </button>
           </div>
+
+          <div className="mt-3 grid grid-cols-3 gap-2">
+            {[
+              { k: "10k+", v: "Verified" },
+              { k: "40+", v: "Specialties" },
+              { k: "4.9★", v: "Avg. Rating" },
+            ].map((s) => (
+              <div
+                key={s.v}
+                className="rounded-2xl bg-surface/85 backdrop-blur border border-border/50 px-3 py-2 text-center"
+              >
+                <p className="text-[13px] font-display font-bold text-foreground leading-none">
+                  {s.k}
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-1">{s.v}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Quick toggles + sheet triggers */}
       <div className="mt-4 flex gap-2 overflow-x-auto no-scrollbar px-5 pb-2">
@@ -135,17 +157,6 @@ function FindDoctors() {
             <SheetChip
               icon={<MapPin className="h-3.5 w-3.5" />}
               label={location.split(",")[0]}
-            />
-          }
-        />
-        <SpecialtySheet
-          selected={specialties}
-          onChange={setSpecialties}
-          trigger={
-            <SheetChip
-              icon={<Stethoscope className="h-3.5 w-3.5" />}
-              label={specialties.length ? `Specialty · ${specialties.length}` : "Specialty"}
-              active={!!specialties.length}
             />
           }
         />
@@ -183,8 +194,12 @@ function FindDoctors() {
       </div>
 
       {/* Specialty quick-pick rail */}
-      <div className="mt-4 flex gap-3 overflow-x-auto no-scrollbar px-5 pb-1">
-        {SPECIALTY_LIST.slice(0, 7).map(({ label, icon: Icon }) => {
+      <div className="mt-4 px-5 flex items-center gap-2 text-[11.5px] font-semibold text-muted-foreground">
+        <Stethoscope className="h-3.5 w-3.5" />
+        Browse by specialty
+      </div>
+      <div className="mt-2 flex gap-3 overflow-x-auto no-scrollbar px-5 pb-1">
+        {SPECIALTY_LIST.slice(0, 8).map(({ label, icon: Icon }) => {
           const active = specialties.includes(label);
           return (
             <button
