@@ -176,7 +176,7 @@ export const doctors: Doctor[] = [
 export const getDoctor = (id: string) => doctors.find((d) => d.id === id);
 
 export const formatFee = (fee?: number) =>
-  typeof fee === "number" ? `₹${fee}` : "Fee on call";
+  typeof fee === "number" ? `₹${fee}` : "Ask Fees";
 
 export const formatFeeLong = (fee?: number) =>
-  typeof fee === "number" ? `₹${fee}` : "Call for fee details";
+  typeof fee === "number" ? `₹${fee}` : "Ask Fees";
