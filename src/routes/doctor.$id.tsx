@@ -125,7 +125,7 @@ function DoctorDetail() {
         </div>
 
         <div className="mt-4 flex flex-wrap gap-1.5">
-          {doctor.badges.map((b) => (
+          {doctor.badges.map((b: string) => (
             <span
               key={b}
               className="text-[10.5px] font-semibold px-2.5 py-1 rounded-full bg-surface/80 backdrop-blur border border-border/60 text-foreground"
@@ -213,7 +213,7 @@ function DoctorDetail() {
           <h2 className="text-[15px] font-display font-bold text-foreground">Treatments & Specializations</h2>
         </div>
         <div className="flex gap-2 overflow-x-auto no-scrollbar px-5">
-          {doctor.treatments.map((t) => (
+          {doctor.treatments.map((t: string) => (
             <span
               key={t}
               className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-surface border border-border/60 px-3.5 py-2 text-[12px] font-semibold shadow-card"
