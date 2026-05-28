@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { BadgeCheck, Heart, MessageCircle, Phone, Share2, Star, Wifi } from "lucide-react";
-import type { Doctor } from "@/lib/doctors";
+import { BadgeCheck, Heart, MessageCircle, Phone, Share2, Star } from "lucide-react";
+import { formatFee, type Doctor } from "@/lib/doctors";
 
 export function DoctorCard({ doctor }: { doctor: Doctor }) {
+  const hasFee = typeof doctor.fee === "number";
+
   return (
     <Link
       to="/doctor/$id"
@@ -11,22 +13,19 @@ export function DoctorCard({ doctor }: { doctor: Doctor }) {
     >
       <div className="flex gap-4">
         <div className="relative shrink-0">
-          <img
-            src={doctor.image}
-            alt={doctor.name}
-            loading="lazy"
-            width={88}
-            height={88}
-            className="h-22 w-22 h-[88px] w-[88px] rounded-2xl object-cover"
-          />
-          {doctor.online && (
-            <span className="absolute -bottom-1 -right-1 flex items-center gap-1 bg-success text-success-foreground text-[10px] font-semibold px-1.5 py-0.5 rounded-full ring-2 ring-surface">
-              <Wifi className="h-2.5 w-2.5" /> Live
-            </span>
-          )}
+          <div className="p-[3px] rounded-2xl bg-gradient-to-br from-primary-soft via-background to-border/60">
+            <img
+              src={doctor.image}
+              alt={doctor.name}
+              loading="lazy"
+              width={104}
+              height={104}
+              className="h-[104px] w-[104px] rounded-[14px] object-cover ring-1 ring-border/60"
+            />
+          </div>
           {doctor.verified && (
-            <span className="absolute -top-1 -left-1 h-6 w-6 bg-surface rounded-full grid place-items-center shadow-card">
-              <BadgeCheck className="h-5 w-5 text-primary" />
+            <span className="absolute -bottom-1.5 -right-1.5 h-7 w-7 bg-surface rounded-full grid place-items-center shadow-card ring-2 ring-surface">
+              <BadgeCheck className="h-[18px] w-[18px] text-primary" />
             </span>
           )}
         </div>
@@ -41,7 +40,7 @@ export function DoctorCard({ doctor }: { doctor: Doctor }) {
                 {doctor.specialty} · {doctor.subSpecialty}
               </p>
             </div>
-            <div className="flex items-center gap-1 bg-primary-soft text-primary px-2 py-1 rounded-full">
+            <div className="flex items-center gap-1 bg-primary-soft text-primary px-2 py-1 rounded-full shrink-0">
               <Star className="h-3 w-3 fill-primary" />
               <span className="text-[11px] font-semibold">{doctor.rating}</span>
             </div>
@@ -73,19 +72,21 @@ export function DoctorCard({ doctor }: { doctor: Doctor }) {
         <Stat label="Reviews" value={`${doctor.reviews}`} />
       </div>
 
-      <div className="mt-3 flex items-center justify-between">
-        <div>
-          <p className="text-[11px] text-muted-foreground">Consultation</p>
-          <p className="text-[15px] font-display font-bold text-foreground">
-            ₹{doctor.fee}
+      <div className="mt-3 flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <p className="text-[10.5px] text-muted-foreground uppercase tracking-wider font-medium">
+            {hasFee ? "Consultation fee" : "Consultation"}
+          </p>
+          <p className="text-[15px] font-display font-bold text-foreground truncate">
+            {formatFee(doctor.fee)}
             <span className="ml-2 text-[10.5px] font-medium text-muted-foreground">
               {doctor.availableToday ? `Avl. ${doctor.nextSlot}` : doctor.nextSlot}
             </span>
           </p>
         </div>
-        <div className="flex items-center gap-1.5">
-          <IconBtn><Heart className="h-4 w-4" /></IconBtn>
-          <IconBtn><Share2 className="h-4 w-4" /></IconBtn>
+        <div className="flex items-center gap-1.5 shrink-0">
+          <IconBtn label="Save"><Heart className="h-4 w-4" /></IconBtn>
+          <IconBtn label="Share"><Share2 className="h-4 w-4" /></IconBtn>
           <button
             onClick={(e) => e.preventDefault()}
             className="h-9 w-9 grid place-items-center rounded-full bg-success text-success-foreground shadow-card"
@@ -96,6 +97,7 @@ export function DoctorCard({ doctor }: { doctor: Doctor }) {
           <button
             onClick={(e) => e.preventDefault()}
             className="h-9 px-3 inline-flex items-center gap-1.5 rounded-full bg-gradient-brand text-primary-foreground text-[12px] font-semibold shadow-glow"
+            aria-label="Call"
           >
             <Phone className="h-3.5 w-3.5" /> Call
           </button>
@@ -114,10 +116,11 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function IconBtn({ children }: { children: React.ReactNode }) {
+function IconBtn({ children, label }: { children: React.ReactNode; label: string }) {
   return (
     <button
       onClick={(e) => e.preventDefault()}
+      aria-label={label}
       className="h-9 w-9 grid place-items-center rounded-full bg-surface border border-border text-muted-foreground"
     >
       {children}

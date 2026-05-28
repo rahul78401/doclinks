@@ -1,24 +1,35 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
 import {
   ArrowLeft,
+  Award,
   BadgeCheck,
   Bookmark,
   Calendar,
   Car,
   ChevronRight,
+  Clock,
+  Facebook,
+  Globe,
   Globe2,
   Heart,
+  Instagram,
+  Linkedin,
   MapPin,
   MessageCircle,
   Navigation,
   Phone,
+  PhoneCall,
   Share2,
   ShieldCheck,
+  Sparkles,
   Star,
   Train,
+  TrendingUp,
   Users,
+  Wallet,
+  Youtube,
 } from "lucide-react";
-import { getDoctor, doctors } from "@/lib/doctors";
+import { doctors, formatFee, formatFeeLong, getDoctor, type DaySchedule } from "@/lib/doctors";
 import clinicImg from "@/assets/clinic-1.jpg";
 
 export const Route = createFileRoute("/doctor/$id")({
@@ -46,7 +57,10 @@ export const Route = createFileRoute("/doctor/$id")({
           <h1 className="font-display text-lg font-semibold">Couldn't load doctor</h1>
           <p className="text-sm text-muted-foreground mt-1">{error.message}</p>
           <button
-            onClick={() => { router.invalidate(); reset(); }}
+            onClick={() => {
+              router.invalidate();
+              reset();
+            }}
             className="mt-4 rounded-full bg-foreground text-background px-4 py-2 text-sm font-semibold"
           >
             Try again
@@ -68,141 +82,190 @@ export const Route = createFileRoute("/doctor/$id")({
   component: DoctorDetail,
 });
 
+const SOCIAL_DEFS = [
+  { key: "instagram", label: "Instagram", icon: Instagram },
+  { key: "facebook", label: "Facebook", icon: Facebook },
+  { key: "youtube", label: "YouTube", icon: Youtube },
+  { key: "linkedin", label: "LinkedIn", icon: Linkedin },
+  { key: "website", label: "Website", icon: Globe },
+] as const;
+
 function DoctorDetail() {
   const { doctor } = Route.useLoaderData();
   const similar = doctors.filter((d) => d.id !== doctor.id);
+  const hasFee = typeof doctor.fee === "number";
 
   return (
     <div className="min-h-screen bg-background pb-28">
-      {/* Sticky header */}
-      <header className="sticky top-0 z-40 glass border-b border-border/60">
-        <div className="flex items-center justify-between px-4 py-3">
+      {/* Hero — extends behind safe area, header floats on top */}
+      <section className="relative bg-gradient-hero pt-[max(env(safe-area-inset-top),0px)]">
+        {/* Floating header — no white strip */}
+        <header className="relative z-40 flex items-center justify-between px-4 pt-3 pb-2">
           <Link
             to="/find-doctors"
-            className="h-10 w-10 grid place-items-center rounded-full bg-surface shadow-card border border-border/60"
+            className="h-10 w-10 grid place-items-center rounded-full bg-surface/85 backdrop-blur shadow-card border border-border/40"
             aria-label="Back"
           >
             <ArrowLeft className="h-[18px] w-[18px]" />
           </Link>
           <div className="flex items-center gap-2">
-            <button className="h-10 w-10 grid place-items-center rounded-full bg-surface shadow-card border border-border/60">
+            <button
+              aria-label="Share"
+              className="h-10 w-10 grid place-items-center rounded-full bg-surface/85 backdrop-blur shadow-card border border-border/40"
+            >
               <Share2 className="h-[18px] w-[18px]" />
             </button>
-            <button className="h-10 w-10 grid place-items-center rounded-full bg-surface shadow-card border border-border/60">
+            <button
+              aria-label="Save"
+              className="h-10 w-10 grid place-items-center rounded-full bg-surface/85 backdrop-blur shadow-card border border-border/40"
+            >
               <Bookmark className="h-[18px] w-[18px]" />
             </button>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Hero */}
-      <section className="relative px-5 pt-3 pb-6 bg-gradient-hero">
-        <div className="flex gap-4">
-          <div className="relative">
-            <img
-              src={doctor.image}
-              alt={doctor.name}
-              width={112}
-              height={112}
-              className="h-28 w-28 rounded-3xl object-cover shadow-card ring-4 ring-surface"
-            />
-            <span className="absolute -bottom-2 -right-2 h-8 w-8 grid place-items-center rounded-full bg-surface shadow-card">
-              <BadgeCheck className="h-6 w-6 text-primary" />
-            </span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-primary uppercase tracking-wide">
+        <div className="px-5 pt-2 pb-6">
+          {/* Top label row */}
+          <div className="flex items-center gap-2">
+            <span className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-primary">
               {doctor.specialty}
-            </p>
-            <h1 className="font-display text-[22px] font-bold text-foreground leading-tight">
-              {doctor.name}
-            </h1>
-            <p className="text-[12.5px] text-muted-foreground">{doctor.subSpecialty}</p>
-            <p className="mt-1 text-[12px] text-foreground/80 flex items-center gap-1">
-              <MapPin className="h-3 w-3" /> {doctor.clinic} · {doctor.location}
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {doctor.badges.map((b: string) => (
-            <span
-              key={b}
-              className="text-[10.5px] font-semibold px-2.5 py-1 rounded-full bg-surface/80 backdrop-blur border border-border/60 text-foreground"
-            >
-              ⭐ {b}
             </span>
-          ))}
-          <span className="text-[10.5px] font-semibold px-2.5 py-1 rounded-full bg-foreground text-background">
-            Top Rated in {doctor.city}
-          </span>
-        </div>
-
-        <div className="mt-4 grid grid-cols-4 gap-2">
-          <HeroStat icon={<Star className="h-3.5 w-3.5" />} value={`${doctor.rating}`} label="Rating" />
-          <HeroStat icon={<Users className="h-3.5 w-3.5" />} value={doctor.followers} label="Followers" />
-          <HeroStat value={`${doctor.experience}y`} label="Experience" />
-          <HeroStat value={`₹${doctor.fee}`} label="Fee" />
-        </div>
-
-        <div className="mt-4 flex gap-2">
-          <button className="flex-1 h-12 rounded-2xl bg-gradient-brand text-primary-foreground font-semibold text-[14px] shadow-glow inline-flex items-center justify-center gap-2">
-            <Phone className="h-4 w-4" /> Call Now
-          </button>
-          <button className="h-12 px-4 rounded-2xl bg-success text-success-foreground font-semibold text-[14px] inline-flex items-center gap-2 shadow-card">
-            <MessageCircle className="h-4 w-4" /> WhatsApp
-          </button>
-          <button className="h-12 w-12 grid place-items-center rounded-2xl bg-surface border border-border/60 shadow-card">
-            <Heart className="h-[18px] w-[18px] text-foreground" />
-          </button>
-        </div>
-      </section>
-
-      {/* Trust */}
-      <section className="px-5 mt-5">
-        <Card>
-          <CardHeader icon={<ShieldCheck className="h-4 w-4" />} title="Trust & Verification">
-            <span className="text-[10.5px] font-bold text-success">98 / 100</span>
-          </CardHeader>
-          <div className="h-2 rounded-full bg-muted overflow-hidden">
-            <div className="h-full w-[98%] bg-gradient-brand rounded-full" />
+            <span className="h-1 w-1 rounded-full bg-primary/40" />
+            <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-foreground bg-surface/80 backdrop-blur border border-border/50 px-2 py-0.5 rounded-full">
+              <BadgeCheck className="h-3 w-3 text-primary" /> Verified Doctor
+            </span>
           </div>
-          <div className="mt-4 space-y-2.5">
-            {[
-              "Medical registration verified",
-              "Clinic address verified",
-              "Qualification verified",
-              "Experience verified",
-            ].map((v) => (
-              <div key={v} className="flex items-center justify-between">
-                <p className="text-[12.5px] text-foreground">{v}</p>
-                <BadgeCheck className="h-4 w-4 text-primary" />
+
+          {/* Identity */}
+          <div className="mt-3 flex gap-4">
+            <div className="relative shrink-0">
+              <div className="p-[3px] rounded-[22px] bg-gradient-to-br from-surface via-primary-soft to-background shadow-card">
+                <img
+                  src={doctor.image}
+                  alt={doctor.name}
+                  width={128}
+                  height={128}
+                  className="h-32 w-32 rounded-[18px] object-cover ring-1 ring-border/60"
+                />
               </div>
-            ))}
+              {doctor.verified && (
+                <span className="absolute -bottom-1.5 -right-1.5 h-8 w-8 grid place-items-center rounded-full bg-surface shadow-card ring-2 ring-background">
+                  <BadgeCheck className="h-5 w-5 text-primary" />
+                </span>
+              )}
+            </div>
+
+            <div className="flex-1 min-w-0 pt-1">
+              <h1 className="font-display text-[24px] leading-tight font-bold text-foreground text-balance">
+                {doctor.name}
+              </h1>
+              <p className="mt-0.5 text-[12.5px] text-muted-foreground">
+                {doctor.subSpecialty}
+              </p>
+              <p className="mt-2 text-[12.5px] text-foreground/85 font-medium flex items-start gap-1.5">
+                <MapPin className="h-3.5 w-3.5 mt-0.5 text-primary shrink-0" />
+                <span className="truncate">
+                  {doctor.clinic} · {doctor.location}
+                </span>
+              </p>
+              <p className="mt-1 text-[11.5px] text-muted-foreground flex items-center gap-1.5">
+                <Clock className="h-3 w-3" />
+                {doctor.availableToday ? (
+                  <>
+                    <span className="text-success font-semibold">Available today</span>
+                    <span>· {doctor.nextSlot}</span>
+                  </>
+                ) : (
+                  <>Next: {doctor.nextSlot}</>
+                )}
+              </p>
+            </div>
           </div>
-          <p className="mt-3 text-[11px] text-muted-foreground">
-            Last verified · 12 May 2026 by the DocLinks Trust team
-          </p>
-        </Card>
+
+          {/* Trust badges */}
+          <div className="mt-4 flex flex-wrap gap-1.5">
+            {doctor.badges.map((b) => (
+              <TrustBadge key={b}>{b}</TrustBadge>
+            ))}
+            <TrustBadge primary>Top Rated in {doctor.city}</TrustBadge>
+          </div>
+
+          {/* Floating stats */}
+          <div className="mt-5 grid grid-cols-2 gap-2.5">
+            <StatCard
+              icon={<Star className="h-4 w-4" />}
+              value={`${doctor.rating}`}
+              hint={`${doctor.reviews} reviews`}
+              label="Rating"
+            />
+            <StatCard
+              icon={<Award className="h-4 w-4" />}
+              value={`${doctor.experience}+`}
+              hint="years practising"
+              label="Experience"
+            />
+            <StatCard
+              icon={<Users className="h-4 w-4" />}
+              value={doctor.followers}
+              hint={`${doctor.recommendation}% recommend`}
+              label="Followers"
+            />
+            <StatCard
+              icon={<Wallet className="h-4 w-4" />}
+              value={hasFee ? formatFee(doctor.fee) : "On call"}
+              hint={hasFee ? "Consultation" : formatFeeLong(doctor.fee)}
+              label="Fee"
+            />
+          </div>
+
+          {/* CTA row */}
+          <div className="mt-5 flex gap-2">
+            <button className="flex-1 h-13 py-3.5 rounded-2xl bg-gradient-brand text-primary-foreground font-semibold text-[14px] shadow-glow inline-flex items-center justify-center gap-2">
+              <Phone className="h-4 w-4" /> Call Now
+            </button>
+            <button className="h-13 py-3.5 px-4 rounded-2xl bg-success text-success-foreground font-semibold text-[13px] inline-flex items-center gap-1.5 shadow-card">
+              <MessageCircle className="h-4 w-4" /> WhatsApp
+            </button>
+            <button
+              aria-label="Save"
+              className="h-13 py-3.5 w-13 px-3 grid place-items-center rounded-2xl bg-surface border border-border/60 shadow-card"
+            >
+              <Heart className="h-[18px] w-[18px] text-foreground" />
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* About */}
-      <section className="px-5 mt-4">
+      <section className="px-5 mt-5">
         <Card>
           <CardHeader title="About the doctor" />
           <p className="text-[13px] leading-relaxed text-foreground/85">
-            {doctor.name} is a {doctor.specialty.toLowerCase()} with {doctor.experience}+ years of
-            experience treating complex cases at {doctor.clinic}. Known for a patient-first
-            approach, evidence-based care, and a calm bedside manner.
+            {doctor.name} is a {doctor.specialty.toLowerCase()} with{" "}
+            {doctor.experience}+ years of experience treating complex cases at{" "}
+            {doctor.clinic}. Known for a patient-first approach, evidence-based
+            care, and a calm bedside manner.
           </p>
           <button className="mt-2 text-[12px] font-semibold text-primary inline-flex items-center gap-1">
             Read more <ChevronRight className="h-3 w-3" />
           </button>
           <div className="mt-3 grid grid-cols-2 gap-3 text-[12px]">
-            <Meta label="Languages" value={doctor.languages.join(", ")} icon={<Globe2 className="h-3.5 w-3.5" />} />
+            <Meta
+              label="Languages"
+              value={doctor.languages.join(", ")}
+              icon={<Globe2 className="h-3.5 w-3.5" />}
+            />
             <Meta label="Gender" value={doctor.gender} />
-            <Meta label="Followers" value={doctor.followers} />
-            <Meta label="Recommend" value={`${doctor.recommendation}%`} />
+            <Meta
+              label="Recommend"
+              value={`${doctor.recommendation}%`}
+              icon={<TrendingUp className="h-3.5 w-3.5" />}
+            />
+            <Meta
+              label="Consultation"
+              value={formatFeeLong(doctor.fee)}
+              icon={<Wallet className="h-3.5 w-3.5" />}
+            />
           </div>
         </Card>
       </section>
@@ -210,72 +273,41 @@ function DoctorDetail() {
       {/* Treatments */}
       <section className="mt-4">
         <div className="px-5 mb-2 flex items-center justify-between">
-          <h2 className="text-[15px] font-display font-bold text-foreground">Treatments & Specializations</h2>
+          <h2 className="text-[15px] font-display font-bold text-foreground">
+            Treatments & Specializations
+          </h2>
         </div>
         <div className="flex gap-2 overflow-x-auto no-scrollbar px-5">
-          {doctor.treatments.map((t: string) => (
+          {doctor.treatments.map((t) => (
             <span
               key={t}
               className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-surface border border-border/60 px-3.5 py-2 text-[12px] font-semibold shadow-card"
             >
-              <span className="h-2 w-2 rounded-full bg-primary" /> {t}
+              <Sparkles className="h-3 w-3 text-primary" /> {t}
             </span>
           ))}
         </div>
       </section>
 
-      {/* Reviews */}
-      <section className="px-5 mt-5">
-        <Card>
-          <CardHeader title="Patient reviews">
-            <div className="flex items-center gap-1 text-[12px] font-semibold">
-              <Star className="h-3.5 w-3.5 fill-warning text-warning" />
-              {doctor.rating} · {doctor.reviews}
-            </div>
-          </CardHeader>
-          <div className="space-y-2">
-            {[
-              { label: "Bedside manner", v: 96 },
-              { label: "Wait time", v: 88 },
-              { label: "Explanation", v: 94 },
-            ].map((r) => (
-              <div key={r.label} className="flex items-center gap-3">
-                <p className="w-28 text-[11.5px] text-muted-foreground">{r.label}</p>
-                <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full bg-gradient-brand" style={{ width: `${r.v}%` }} />
-                </div>
-                <p className="w-8 text-right text-[11px] font-semibold">{r.v}%</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-4 rounded-2xl bg-muted/50 p-3.5">
-            <div className="flex items-center gap-2">
-              <span className="h-8 w-8 rounded-full bg-primary-soft grid place-items-center text-[11px] font-bold text-primary">
-                MR
-              </span>
-              <div>
-                <p className="text-[12.5px] font-semibold">Meera R.</p>
-                <p className="text-[10.5px] text-muted-foreground">Verified patient · 2 weeks ago</p>
-              </div>
-              <span className="ml-auto flex items-center gap-1 text-[11px] font-semibold">
-                <Star className="h-3 w-3 fill-warning text-warning" /> 5.0
-              </span>
-            </div>
-            <p className="mt-2 text-[12.5px] text-foreground/85">
-              Listened carefully, explained every option clearly. No rush, no upsell — exactly the experience I hoped for.
-            </p>
-          </div>
-        </Card>
-      </section>
-
       {/* Clinic */}
       <section className="px-5 mt-4">
         <Card padded={false}>
-          <img src={clinicImg} alt={doctor.clinic} className="w-full h-36 object-cover" loading="lazy" />
+          <img
+            src={clinicImg}
+            alt={doctor.clinic}
+            className="w-full h-36 object-cover"
+            loading="lazy"
+          />
           <div className="p-4">
-            <p className="text-[10.5px] font-semibold text-primary uppercase tracking-wide">Clinic</p>
-            <h3 className="text-[15px] font-display font-bold text-foreground">{doctor.clinic}</h3>
-            <p className="text-[12px] text-muted-foreground">{doctor.location}, {doctor.city}</p>
+            <p className="text-[10.5px] font-semibold text-primary uppercase tracking-wide">
+              Clinic
+            </p>
+            <h3 className="text-[15px] font-display font-bold text-foreground">
+              {doctor.clinic}
+            </h3>
+            <p className="text-[12px] text-muted-foreground">
+              {doctor.location}, {doctor.city}
+            </p>
             <div className="mt-3 flex flex-wrap gap-1.5">
               <Chip icon={<Car className="h-3 w-3" />}>Parking</Chip>
               <Chip icon={<Train className="h-3 w-3" />}>Metro nearby</Chip>
@@ -293,44 +325,28 @@ function DoctorDetail() {
         </Card>
       </section>
 
-      {/* Hours */}
+      {/* Working hours — redesigned */}
       <section className="px-5 mt-4">
-        <Card>
-          <CardHeader icon={<Calendar className="h-4 w-4" />} title="Working hours">
-            <span className="text-[10.5px] font-bold text-success bg-success/10 px-2 py-0.5 rounded-full">
-              Open now
-            </span>
-          </CardHeader>
-          <div className="grid grid-cols-7 gap-1 mt-1">
-            {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => {
-              const open = i !== 6;
-              return (
-                <div
-                  key={i}
-                  className={`rounded-xl py-2 text-center text-[11px] font-semibold ${
-                    i === 1
-                      ? "bg-gradient-brand text-primary-foreground"
-                      : open
-                        ? "bg-primary-soft text-primary"
-                        : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {d}
-                </div>
-              );
-            })}
-          </div>
-          <p className="mt-3 text-[12px] text-foreground/85">
-            Next available · <span className="font-semibold">{doctor.nextSlot}</span>
-          </p>
-        </Card>
+        <WorkingHours hours={doctor.hours} nextSlot={doctor.nextSlot} />
+      </section>
+
+      {/* Connect with me */}
+      <section className="px-5 mt-4">
+        <ConnectWithMe socials={doctor.socials ?? {}} />
       </section>
 
       {/* Similar */}
       <section className="mt-5">
         <div className="px-5 mb-3 flex items-center justify-between">
-          <h2 className="text-[15px] font-display font-bold text-foreground">Similar doctors</h2>
-          <Link to="/find-doctors" className="text-[12px] font-semibold text-primary">See all</Link>
+          <h2 className="text-[15px] font-display font-bold text-foreground">
+            Similar doctors
+          </h2>
+          <Link
+            to="/find-doctors"
+            className="text-[12px] font-semibold text-primary"
+          >
+            See all
+          </Link>
         </div>
         <div className="flex gap-3 overflow-x-auto no-scrollbar px-5 pb-2">
           {similar.map((d) => (
@@ -340,14 +356,25 @@ function DoctorDetail() {
               params={{ id: d.id }}
               className="shrink-0 w-[180px] bg-surface rounded-2xl border border-border/60 shadow-card p-3"
             >
-              <img src={d.image} alt={d.name} className="h-24 w-full rounded-xl object-cover" loading="lazy" />
+              <img
+                src={d.image}
+                alt={d.name}
+                className="h-24 w-full rounded-xl object-cover"
+                loading="lazy"
+              />
               <div className="mt-2 flex items-center gap-1">
                 <BadgeCheck className="h-3.5 w-3.5 text-primary" />
-                <p className="text-[12.5px] font-display font-semibold truncate">{d.name}</p>
+                <p className="text-[12.5px] font-display font-semibold truncate">
+                  {d.name}
+                </p>
               </div>
-              <p className="text-[11px] text-muted-foreground truncate">{d.specialty}</p>
+              <p className="text-[11px] text-muted-foreground truncate">
+                {d.specialty}
+              </p>
               <div className="mt-1.5 flex items-center justify-between">
-                <span className="text-[11px] font-semibold">₹{d.fee}</span>
+                <span className="text-[11px] font-semibold">
+                  {formatFee(d.fee)}
+                </span>
                 <span className="inline-flex items-center gap-0.5 text-[11px] font-semibold text-primary">
                   <Star className="h-3 w-3 fill-primary" /> {d.rating}
                 </span>
@@ -358,15 +385,21 @@ function DoctorDetail() {
       </section>
 
       {/* Sticky bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-border/60 px-4 py-3 pb-5">
+      <div className="fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-border/60 px-4 py-3 pb-[max(env(safe-area-inset-bottom),1rem)]">
         <div className="flex gap-2 max-w-md mx-auto">
           <button className="flex-1 h-12 rounded-2xl bg-gradient-brand text-primary-foreground font-semibold text-[14px] shadow-glow inline-flex items-center justify-center gap-2 animate-pulse-soft">
-            <Phone className="h-4 w-4" /> Call Now
+            <PhoneCall className="h-4 w-4" /> Call Now
           </button>
-          <button className="h-12 px-4 rounded-2xl bg-success text-success-foreground font-semibold text-[14px] inline-flex items-center gap-2">
+          <button
+            aria-label="WhatsApp"
+            className="h-12 px-4 rounded-2xl bg-success text-success-foreground inline-flex items-center gap-2"
+          >
             <MessageCircle className="h-4 w-4" />
           </button>
-          <button className="h-12 px-4 rounded-2xl bg-surface border border-border text-foreground inline-flex items-center gap-2">
+          <button
+            aria-label="Share"
+            className="h-12 px-4 rounded-2xl bg-surface border border-border text-foreground inline-flex items-center gap-2"
+          >
             <Share2 className="h-4 w-4" />
           </button>
         </div>
@@ -375,9 +408,214 @@ function DoctorDetail() {
   );
 }
 
-function Card({ children, padded = true }: { children: React.ReactNode; padded?: boolean }) {
+/* ───────── Working hours ───────── */
+
+function WorkingHours({
+  hours,
+  nextSlot,
+}: {
+  hours: DaySchedule[];
+  nextSlot: string;
+}) {
+  // Use a fixed reference day so SSR/CSR match.
+  const todayIdx = 1; // Tuesday — matches "Open now" demo state
+  const today = hours[todayIdx];
+  const isOpen = !!today?.open;
+
   return (
-    <div className={`bg-surface rounded-3xl border border-border/60 shadow-card overflow-hidden ${padded ? "p-4" : ""}`}>
+    <Card>
+      <CardHeader icon={<Calendar className="h-4 w-4" />} title="Working hours">
+        {isOpen ? (
+          <span className="inline-flex items-center gap-1 text-[10.5px] font-bold text-success bg-success/12 px-2 py-1 rounded-full">
+            <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse-soft" />
+            Open now
+          </span>
+        ) : (
+          <span className="text-[10.5px] font-bold text-muted-foreground bg-muted px-2 py-1 rounded-full">
+            Closed
+          </span>
+        )}
+      </CardHeader>
+
+      {/* Today highlight */}
+      <div className="rounded-2xl bg-gradient-to-br from-primary-soft to-background border border-border/60 p-3.5">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-[10.5px] uppercase tracking-wider font-semibold text-primary">
+              Today · {today?.day}
+            </p>
+            <p className="mt-0.5 text-[15px] font-display font-bold text-foreground">
+              {today?.open && today?.close
+                ? `${today.open} – ${today.close}`
+                : "Closed today"}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-[10.5px] uppercase tracking-wider text-muted-foreground font-semibold">
+              Next slot
+            </p>
+            <p className="text-[12.5px] font-display font-bold text-foreground">
+              {nextSlot}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Weekly timeline */}
+      <ul className="mt-3 divide-y divide-border/60">
+        {hours.map((d, i) => {
+          const open = !!d.open;
+          const isToday = i === todayIdx;
+          return (
+            <li
+              key={d.day}
+              className="flex items-center justify-between py-2.5"
+            >
+              <div className="flex items-center gap-3">
+                <span
+                  className={`h-2 w-2 rounded-full ${
+                    open ? "bg-success" : "bg-muted-foreground/30"
+                  }`}
+                />
+                <span
+                  className={`text-[12.5px] font-semibold ${
+                    isToday ? "text-foreground" : "text-foreground/80"
+                  }`}
+                >
+                  {d.day}
+                </span>
+                {isToday && (
+                  <span className="text-[10px] font-bold text-primary bg-primary-soft px-1.5 py-0.5 rounded-full">
+                    Today
+                  </span>
+                )}
+              </div>
+              <span
+                className={`text-[12px] font-medium ${
+                  open ? "text-foreground/80" : "text-muted-foreground"
+                }`}
+              >
+                {open ? `${d.open} – ${d.close}` : "Closed"}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </Card>
+  );
+}
+
+/* ───────── Connect with me ───────── */
+
+function ConnectWithMe({
+  socials,
+}: {
+  socials: NonNullable<ReturnType<typeof getDoctor>>["socials"];
+}) {
+  const available = SOCIAL_DEFS.filter((s) => socials?.[s.key]);
+  if (!available.length) return null;
+
+  return (
+    <Card>
+      <CardHeader icon={<Sparkles className="h-4 w-4" />} title="Connect with me">
+        <span className="text-[10.5px] text-muted-foreground">
+          Verified handles
+        </span>
+      </CardHeader>
+      <div className="grid grid-cols-5 gap-2">
+        {available.map(({ key, label, icon: Icon }) => (
+          <a
+            key={key}
+            href={socials?.[key]}
+            target="_blank"
+            rel="noreferrer"
+            className="group flex flex-col items-center gap-1.5"
+            aria-label={label}
+          >
+            <span className="h-12 w-12 grid place-items-center rounded-2xl bg-muted/70 border border-border/60 text-foreground/80 transition-all group-hover:bg-foreground group-hover:text-background group-hover:shadow-card">
+              <Icon className="h-[18px] w-[18px]" />
+            </span>
+            <span className="text-[10px] font-medium text-muted-foreground">
+              {label}
+            </span>
+          </a>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+/* ───────── Hero subcomponents ───────── */
+
+function TrustBadge({
+  children,
+  primary = false,
+}: {
+  children: React.ReactNode;
+  primary?: boolean;
+}) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1 text-[10.5px] font-semibold px-2.5 py-1 rounded-full backdrop-blur border ${
+        primary
+          ? "bg-foreground text-background border-foreground"
+          : "bg-surface/85 text-foreground border-border/60"
+      }`}
+    >
+      <ShieldCheck className="h-3 w-3" />
+      {children}
+    </span>
+  );
+}
+
+function StatCard({
+  icon,
+  value,
+  label,
+  hint,
+}: {
+  icon: React.ReactNode;
+  value: string;
+  label: string;
+  hint?: string;
+}) {
+  return (
+    <div className="rounded-2xl bg-surface/90 backdrop-blur border border-border/60 shadow-card p-3">
+      <div className="flex items-center justify-between">
+        <span className="h-7 w-7 grid place-items-center rounded-lg bg-primary-soft text-primary">
+          {icon}
+        </span>
+        <p className="text-[9.5px] uppercase tracking-wider text-muted-foreground font-semibold">
+          {label}
+        </p>
+      </div>
+      <p className="mt-2 text-[18px] font-display font-bold text-foreground leading-none">
+        {value}
+      </p>
+      {hint && (
+        <p className="mt-1 text-[10.5px] text-muted-foreground truncate">
+          {hint}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/* ───────── Shared ───────── */
+
+function Card({
+  children,
+  padded = true,
+}: {
+  children: React.ReactNode;
+  padded?: boolean;
+}) {
+  return (
+    <div
+      className={`bg-surface rounded-3xl border border-border/60 shadow-card overflow-hidden ${
+        padded ? "p-4" : ""
+      }`}
+    >
       {children}
     </div>
   );
@@ -400,29 +638,11 @@ function CardHeader({
             {icon}
           </span>
         )}
-        <h3 className="text-[14px] font-display font-bold text-foreground">{title}</h3>
+        <h3 className="text-[14px] font-display font-bold text-foreground">
+          {title}
+        </h3>
       </div>
       {children}
-    </div>
-  );
-}
-
-function HeroStat({
-  value,
-  label,
-  icon,
-}: {
-  value: string;
-  label: string;
-  icon?: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-2xl glass-strong border border-border/60 px-2 py-2.5 text-center">
-      <p className="text-[13px] font-display font-bold text-foreground flex items-center justify-center gap-1">
-        {icon}
-        {value}
-      </p>
-      <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
     </div>
   );
 }
@@ -442,12 +662,20 @@ function Meta({
         {icon}
         {label}
       </p>
-      <p className="text-[12.5px] font-semibold text-foreground mt-0.5">{value}</p>
+      <p className="text-[12.5px] font-semibold text-foreground mt-0.5">
+        {value}
+      </p>
     </div>
   );
 }
 
-function Chip({ children, icon }: { children: React.ReactNode; icon?: React.ReactNode }) {
+function Chip({
+  children,
+  icon,
+}: {
+  children: React.ReactNode;
+  icon?: React.ReactNode;
+}) {
   return (
     <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-muted text-[11px] font-medium text-foreground">
       {icon}
