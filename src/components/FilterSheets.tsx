@@ -16,6 +16,13 @@ import {
   Activity,
   Microscope,
   ShieldPlus,
+  MapPin,
+  Building2,
+  Landmark,
+  TreePine,
+  Globe2,
+  Languages as LanguagesIcon,
+  Star,
 } from "lucide-react";
 import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 
@@ -57,17 +64,27 @@ function Sheet({
 
 /* ───────── Location ───────── */
 
-const POPULAR_LOCATIONS = [
-  "Indiranagar",
-  "Koramangala",
-  "Whitefield",
-  "HSR Layout",
-  "Jayanagar",
-  "Bandra West",
-  "Andheri",
-  "Vasant Kunj",
+type LocItem = { label: string; sub?: string; icon: React.ComponentType<{ className?: string }> };
+
+const POPULAR_LOCATIONS: LocItem[] = [
+  { label: "Indiranagar", sub: "Bengaluru", icon: Landmark },
+  { label: "Koramangala", sub: "Bengaluru", icon: Building2 },
+  { label: "Whitefield", sub: "Bengaluru", icon: TreePine },
+  { label: "HSR Layout", sub: "Bengaluru", icon: Landmark },
+  { label: "Jayanagar", sub: "Bengaluru", icon: TreePine },
+  { label: "Bandra West", sub: "Mumbai", icon: Building2 },
+  { label: "Andheri", sub: "Mumbai", icon: Building2 },
+  { label: "Vasant Kunj", sub: "New Delhi", icon: Landmark },
+  { label: "Navrangpura", sub: "Ahmedabad", icon: Landmark },
+  { label: "Satellite", sub: "Ahmedabad", icon: TreePine },
+  { label: "SG Highway", sub: "Ahmedabad", icon: Building2 },
+  { label: "Gandhinagar", sub: "Gujarat", icon: Landmark },
 ];
-const RECENT_LOCATIONS = ["Indiranagar, Bengaluru", "Koramangala, Bengaluru"];
+
+const RECENT_LOCATIONS: LocItem[] = [
+  { label: "Indiranagar, Bengaluru", icon: History },
+  { label: "Navrangpura, Ahmedabad", icon: History },
+];
 
 export function LocationSheet({
   value,
@@ -81,7 +98,9 @@ export function LocationSheet({
   const [q, setQ] = useState("");
   const list = useMemo(
     () =>
-      POPULAR_LOCATIONS.filter((l) => l.toLowerCase().includes(q.toLowerCase())),
+      POPULAR_LOCATIONS.filter((l) =>
+        (l.label + " " + (l.sub ?? "")).toLowerCase().includes(q.toLowerCase()),
+      ),
     [q],
   );
 
@@ -91,31 +110,44 @@ export function LocationSheet({
       title="Choose location"
       subtitle="Search area, neighbourhood or city"
     >
-      <SearchInput
-        value={q}
-        onChange={setQ}
-        placeholder="Search locality or city"
-      />
+      <SearchInput value={q} onChange={setQ} placeholder="Search locality or city" />
 
       <button
         onClick={() => onChange("Near me")}
         className="mt-3 w-full flex items-center gap-3 rounded-2xl bg-primary-soft text-primary px-4 py-3 font-semibold text-[13px]"
       >
-        <Crosshair className="h-4 w-4" /> Use current location
+        <span className="h-9 w-9 grid place-items-center rounded-xl bg-surface text-primary shadow-card">
+          <Crosshair className="h-4 w-4" />
+        </span>
+        <span className="flex-1 text-left">
+          Use current location
+          <span className="block text-[11px] font-medium text-primary/70">
+            Allow GPS access
+          </span>
+        </span>
       </button>
 
       {!q && (
         <Section title="Recent" icon={<History className="h-3.5 w-3.5" />}>
-          {RECENT_LOCATIONS.map((l) => (
-            <Row key={l} label={l} selected={value === l} onClick={() => onChange(l)} />
-          ))}
+          <div className="space-y-1">
+            {RECENT_LOCATIONS.map((l) => (
+              <LocRow key={l.label} item={l} selected={value === l.label} onClick={() => onChange(l.label)} />
+            ))}
+          </div>
         </Section>
       )}
 
-      <Section title={q ? "Results" : "Popular nearby"}>
-        {list.map((l) => (
-          <Row key={l} label={l} selected={value === l} onClick={() => onChange(l)} />
-        ))}
+      <Section title={q ? "Results" : "Popular nearby"} icon={<Star className="h-3.5 w-3.5" />}>
+        <div className="space-y-1">
+          {list.map((l) => (
+            <LocRow
+              key={l.label}
+              item={l}
+              selected={value.startsWith(l.label)}
+              onClick={() => onChange(`${l.label}${l.sub ? `, ${l.sub}` : ""}`)}
+            />
+          ))}
+        </div>
         {q && list.length === 0 && (
           <p className="text-[12.5px] text-muted-foreground py-6 text-center">
             No matches for &ldquo;{q}&rdquo;
@@ -123,6 +155,43 @@ export function LocationSheet({
         )}
       </Section>
     </Sheet>
+  );
+}
+
+function LocRow({
+  item,
+  selected,
+  onClick,
+}: {
+  item: LocItem;
+  selected: boolean;
+  onClick: () => void;
+}) {
+  const Icon = item.icon;
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center gap-3 rounded-2xl px-3 py-2.5 text-left transition-all ${
+        selected ? "bg-primary-soft" : "hover:bg-muted/70"
+      }`}
+    >
+      <span
+        className={`h-9 w-9 grid place-items-center rounded-xl ${
+          selected ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+        }`}
+      >
+        <Icon className="h-4 w-4" />
+      </span>
+      <div className="flex-1 min-w-0">
+        <p className={`text-[13.5px] font-semibold truncate ${selected ? "text-primary" : "text-foreground"}`}>
+          {item.label}
+        </p>
+        {item.sub && (
+          <p className="text-[11px] text-muted-foreground truncate">{item.sub}</p>
+        )}
+      </div>
+      {selected && <Check className="h-4 w-4 text-primary" />}
+    </button>
   );
 }
 
@@ -160,18 +229,22 @@ export function GenderSegmented({
 
 /* ───────── Language ───────── */
 
-const LANGUAGES = [
-  "English",
-  "Hindi",
-  "Tamil",
-  "Telugu",
-  "Kannada",
-  "Malayalam",
-  "Marathi",
-  "Gujarati",
-  "Bengali",
-  "Punjabi",
-  "Urdu",
+type LangItem = { label: string; native: string; popular?: boolean };
+
+const LANGUAGES: LangItem[] = [
+  { label: "English", native: "English", popular: true },
+  { label: "Hindi", native: "हिन्दी", popular: true },
+  { label: "Tamil", native: "தமிழ்", popular: true },
+  { label: "Telugu", native: "తెలుగు", popular: true },
+  { label: "Kannada", native: "ಕನ್ನಡ", popular: true },
+  { label: "Malayalam", native: "മലയാളം", popular: true },
+  { label: "Marathi", native: "मराठी", popular: true },
+  { label: "Gujarati", native: "ગુજરાતી", popular: true },
+  { label: "Bengali", native: "বাংলা" },
+  { label: "Punjabi", native: "ਪੰਜਾਬੀ" },
+  { label: "Urdu", native: "اردو" },
+  { label: "Odia", native: "ଓଡ଼ିଆ" },
+  { label: "Assamese", native: "অসমীয়া" },
 ];
 
 export function LanguageSheet({
@@ -186,8 +259,10 @@ export function LanguageSheet({
   const [q, setQ] = useState("");
   const [local, setLocal] = useState<string[]>(selected);
   const filtered = LANGUAGES.filter((l) =>
-    l.toLowerCase().includes(q.toLowerCase()),
+    (l.label + " " + l.native).toLowerCase().includes(q.toLowerCase()),
   );
+  const popular = filtered.filter((l) => l.popular);
+  const rest = filtered.filter((l) => !l.popular);
   const toggle = (l: string) =>
     setLocal((s) => (s.includes(l) ? s.filter((x) => x !== l) : [...s, l]));
 
@@ -214,26 +289,63 @@ export function LanguageSheet({
       }
     >
       <SearchInput value={q} onChange={setQ} placeholder="Search language" />
-      <div className="mt-4 flex flex-wrap gap-2">
-        {filtered.map((l) => {
-          const active = local.includes(l);
-          return (
-            <button
-              key={l}
-              onClick={() => toggle(l)}
-              className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[12.5px] font-semibold border transition-all ${
-                active
-                  ? "bg-foreground text-background border-foreground"
-                  : "bg-surface text-foreground border-border/60"
+
+      {!q && (
+        <Section title="Popular in India" icon={<LanguagesIcon className="h-3.5 w-3.5" />}>
+          <LangGrid items={popular} selected={local} onToggle={toggle} />
+        </Section>
+      )}
+
+      {(q || rest.length > 0) && (
+        <Section title={q ? "Results" : "All languages"} icon={<Globe2 className="h-3.5 w-3.5" />}>
+          <LangGrid items={q ? filtered : rest} selected={local} onToggle={toggle} />
+        </Section>
+      )}
+    </Sheet>
+  );
+}
+
+function LangGrid({
+  items,
+  selected,
+  onToggle,
+}: {
+  items: LangItem[];
+  selected: string[];
+  onToggle: (v: string) => void;
+}) {
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {items.map((l) => {
+        const active = selected.includes(l.label);
+        return (
+          <button
+            key={l.label}
+            onClick={() => onToggle(l.label)}
+            className={`flex items-center gap-2.5 rounded-2xl border px-3 py-2.5 text-left transition-all ${
+              active
+                ? "bg-foreground text-background border-foreground"
+                : "bg-surface text-foreground border-border/60"
+            }`}
+          >
+            <span
+              className={`h-8 w-8 grid place-items-center rounded-lg text-[13px] font-display font-bold ${
+                active ? "bg-background/15 text-background" : "bg-primary-soft text-primary"
               }`}
             >
-              {active && <Check className="h-3.5 w-3.5" />}
-              {l}
-            </button>
-          );
-        })}
-      </div>
-    </Sheet>
+              {l.native.slice(0, 2)}
+            </span>
+            <div className="flex-1 min-w-0">
+              <p className="text-[12.5px] font-semibold truncate">{l.label}</p>
+              <p className={`text-[10.5px] truncate ${active ? "text-background/70" : "text-muted-foreground"}`}>
+                {l.native}
+              </p>
+            </div>
+            {active && <Check className="h-3.5 w-3.5" />}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -261,14 +373,14 @@ const TREATMENT_CATEGORIES: Cat[] = [
     icon: Smile,
     items: ["Cosmetic Dentistry", "Root Canals", "Dental X-Rays"],
   },
-  { name: "Cardiology", icon: HeartPulse, items: ["Heart Care Centre"] },
+  { name: "Cardiology", icon: HeartPulse, items: ["Heart Care Centre", "Angioplasty", "ECG"] },
   { name: "Mental Health", icon: Brain, items: ["Psychiatry", "Mental Health"] },
   {
     name: "Oncology",
     icon: ShieldPlus,
     items: ["Cancer Care", "Chemotherapy", "Immunotherapy", "Hormone Therapy"],
   },
-  { name: "Dermatology", icon: Sparkles, items: ["Dermatology & Cosmetology"] },
+  { name: "Dermatology", icon: Sparkles, items: ["Dermatology & Cosmetology", "Acne Treatment", "Laser"] },
   {
     name: "Surgery",
     icon: Scissors,
@@ -366,7 +478,7 @@ export function TreatmentSheet({
   );
 }
 
-/* ───────── Specialty ───────── */
+/* ───────── Specialty (still used by quick-pick rail on listing) ───────── */
 
 const SPECIALTIES = [
   { label: "Dermatologist", icon: Sparkles },
@@ -382,67 +494,6 @@ const SPECIALTIES = [
 ];
 
 export const SPECIALTY_LIST = SPECIALTIES;
-
-export function SpecialtySheet({
-  selected,
-  onChange,
-  trigger,
-}: {
-  selected: string[];
-  onChange: (v: string[]) => void;
-  trigger: React.ReactNode;
-}) {
-  const [q, setQ] = useState("");
-  const [local, setLocal] = useState<string[]>(selected);
-  const filtered = SPECIALTIES.filter((s) =>
-    s.label.toLowerCase().includes(q.toLowerCase()),
-  );
-  const toggle = (l: string) =>
-    setLocal((s) => (s.includes(l) ? s.filter((x) => x !== l) : [...s, l]));
-
-  return (
-    <Sheet
-      trigger={trigger}
-      title="Specialty"
-      subtitle="Filter doctors by medical specialty"
-      footer={
-        <button
-          onClick={() => onChange(local)}
-          className="w-full h-11 rounded-2xl bg-gradient-brand text-primary-foreground font-semibold text-[13px] shadow-glow"
-        >
-          Apply{local.length ? ` · ${local.length}` : ""}
-        </button>
-      }
-    >
-      <SearchInput value={q} onChange={setQ} placeholder="Search specialty" />
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        {filtered.map(({ label, icon: Icon }) => {
-          const active = local.includes(label);
-          return (
-            <button
-              key={label}
-              onClick={() => toggle(label)}
-              className={`flex items-center gap-2 rounded-2xl border px-3 py-3 text-left transition-all ${
-                active
-                  ? "bg-foreground text-background border-foreground"
-                  : "bg-surface text-foreground border-border/60"
-              }`}
-            >
-              <span
-                className={`h-8 w-8 grid place-items-center rounded-lg ${
-                  active ? "bg-background/15 text-background" : "bg-primary-soft text-primary"
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-              </span>
-              <span className="text-[12.5px] font-semibold">{label}</span>
-            </button>
-          );
-        })}
-      </div>
-    </Sheet>
-  );
-}
 
 /* ───────── Building blocks ───────── */
 
@@ -497,28 +548,6 @@ function Section({
   );
 }
 
-function Row({
-  label,
-  selected,
-  onClick,
-}: {
-  label: string;
-  selected: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={`w-full flex items-center justify-between rounded-xl px-3 py-2.5 text-left transition-all ${
-        selected ? "bg-primary-soft text-primary" : "hover:bg-muted/70"
-      }`}
-    >
-      <span className="text-[13px] font-medium">{label}</span>
-      {selected && <Check className="h-4 w-4" />}
-    </button>
-  );
-}
-
 function ChipRow({
   items,
   selected,
@@ -550,3 +579,12 @@ function ChipRow({
     </div>
   );
 }
+
+/* Backwards-compat export — find-doctors no longer renders this chip but other
+   places may import it. Re-export as a no-op wrapper around the trigger. */
+export function SpecialtySheet({ trigger }: { trigger: React.ReactNode; selected?: string[]; onChange?: (v: string[]) => void }) {
+  return <>{trigger}</>;
+}
+
+/* unused helper kept for compatibility */
+export const _MapPin = MapPin;
