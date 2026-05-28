@@ -83,7 +83,7 @@ const SERVICE_ICONS: Record<string, React.ComponentType<{ className?: string }>>
 const WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function HospitalDetail() {
-  const { hospital } = Route.useLoaderData();
+  const { hospital } = Route.useLoaderData() as { hospital: import("@/lib/hospitals").Hospital };
 
   return (
     <div className="min-h-screen bg-background pb-28">
