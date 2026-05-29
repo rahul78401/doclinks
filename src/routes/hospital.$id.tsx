@@ -109,9 +109,6 @@ function HospitalDetail() {
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <div className="flex items-center gap-2">
-              <button className="h-10 w-10 grid place-items-center rounded-full bg-surface/90 backdrop-blur shadow-card text-foreground" aria-label="Share">
-                <Share2 className="h-4 w-4" />
-              </button>
               <button className="h-10 w-10 grid place-items-center rounded-full bg-surface/90 backdrop-blur shadow-card text-foreground" aria-label="Save">
                 <Bookmark className="h-4 w-4" />
               </button>
