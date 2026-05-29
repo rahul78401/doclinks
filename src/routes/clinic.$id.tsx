@@ -346,18 +346,23 @@ function ClinicDetail() {
         <div className="rounded-2xl bg-surface/90 backdrop-blur-xl border border-border/60 shadow-float p-2 flex items-center gap-2">
           <a
             href="tel:+919999999999"
-            className="flex-1 h-11 inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-brand text-primary-foreground text-[13px] font-bold shadow-glow"
+            aria-label="Call Now"
+            className="h-11 w-11 grid place-items-center rounded-xl bg-primary-soft text-primary border border-primary/20"
           >
-            <Phone className="h-4 w-4" /> Call
+            <Phone className="h-4 w-4" />
           </a>
           <button
+            type="button"
             onClick={() => setReachOpen(true)}
-            className="flex-1 h-11 inline-flex items-center justify-center gap-1.5 rounded-xl bg-success text-success-foreground text-[13px] font-bold shadow-card"
+            className="flex-1 h-11 inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-brand text-primary-foreground text-[13px] font-bold shadow-glow"
           >
-            <MessageCircle className="h-4 w-4" /> WhatsApp
+            <Send className="h-4 w-4" /> Direct Enquiry
           </button>
-          <button className="h-11 w-11 grid place-items-center rounded-xl bg-muted text-foreground border border-border/60">
-            <Navigation className="h-4 w-4" />
+          <button
+            aria-label="WhatsApp"
+            className="h-11 w-11 grid place-items-center rounded-xl bg-success text-success-foreground"
+          >
+            <MessageCircle className="h-4 w-4" />
           </button>
         </div>
       </div>
