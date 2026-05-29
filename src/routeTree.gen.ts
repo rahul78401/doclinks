@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LegalRouteImport } from './routes/legal'
 import { Route as HealthPackagesRouteImport } from './routes/health-packages'
 import { Route as BloodTestsRouteImport } from './routes/blood-tests'
 import { Route as TabsRouteImport } from './routes/_tabs'
@@ -26,6 +27,11 @@ import { Route as TabsExploreRouteImport } from './routes/_tabs.explore'
 import { Route as TabsClinicsRouteImport } from './routes/_tabs.clinics'
 import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
 
+const LegalRoute = LegalRouteImport.update({
+  id: '/legal',
+  path: '/legal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HealthPackagesRoute = HealthPackagesRouteImport.update({
   id: '/health-packages',
   path: '/health-packages',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
   '/blood-tests': typeof BloodTestsRoute
   '/health-packages': typeof HealthPackagesRoute
+  '/legal': typeof LegalRoute
   '/account': typeof TabsAccountRoute
   '/clinics': typeof TabsClinicsRoute
   '/explore': typeof TabsExploreRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/blood-tests': typeof BloodTestsRoute
   '/health-packages': typeof HealthPackagesRoute
+  '/legal': typeof LegalRoute
   '/account': typeof TabsAccountRoute
   '/clinics': typeof TabsClinicsRoute
   '/explore': typeof TabsExploreRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/_tabs': typeof TabsRouteWithChildren
   '/blood-tests': typeof BloodTestsRoute
   '/health-packages': typeof HealthPackagesRoute
+  '/legal': typeof LegalRoute
   '/_tabs/account': typeof TabsAccountRoute
   '/_tabs/clinics': typeof TabsClinicsRoute
   '/_tabs/explore': typeof TabsExploreRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blood-tests'
     | '/health-packages'
+    | '/legal'
     | '/account'
     | '/clinics'
     | '/explore'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
   to:
     | '/blood-tests'
     | '/health-packages'
+    | '/legal'
     | '/account'
     | '/clinics'
     | '/explore'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/_tabs'
     | '/blood-tests'
     | '/health-packages'
+    | '/legal'
     | '/_tabs/account'
     | '/_tabs/clinics'
     | '/_tabs/explore'
@@ -218,6 +230,7 @@ export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
   BloodTestsRoute: typeof BloodTestsRoute
   HealthPackagesRoute: typeof HealthPackagesRoute
+  LegalRoute: typeof LegalRoute
   ArticleSlugRoute: typeof ArticleSlugRoute
   CitySlugRoute: typeof CitySlugRoute
   ClinicIdRoute: typeof ClinicIdRoute
@@ -228,6 +241,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/legal': {
+      id: '/legal'
+      path: '/legal'
+      fullPath: '/legal'
+      preLoaderRoute: typeof LegalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/health-packages': {
       id: '/health-packages'
       path: '/health-packages'
@@ -369,6 +389,7 @@ const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
   BloodTestsRoute: BloodTestsRoute,
   HealthPackagesRoute: HealthPackagesRoute,
+  LegalRoute: LegalRoute,
   ArticleSlugRoute: ArticleSlugRoute,
   CitySlugRoute: CitySlugRoute,
   ClinicIdRoute: ClinicIdRoute,
@@ -379,3 +400,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
