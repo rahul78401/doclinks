@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Building2, Stethoscope, Hospital, TestTube2, User } from "lucide-react";
+import { Building2, Stethoscope, Hospital, TestTube2, Compass } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type Tab = { to: string; label: string; icon: LucideIcon; featured?: boolean };
@@ -9,7 +9,7 @@ const tabs: Tab[] = [
   { to: "/clinics", label: "Clinics", icon: Building2 },
   { to: "/find-doctors", label: "Find Doctors", icon: Stethoscope, featured: true },
   { to: "/lab-tests", label: "Lab Tests", icon: TestTube2 },
-  { to: "/account", label: "Account", icon: User },
+  { to: "/explore", label: "Explore", icon: Compass },
 ];
 
 export function BottomNav() {
