@@ -15,6 +15,7 @@ import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
 import { Route as HospitalIdRouteImport } from './routes/hospital.$id'
 import { Route as DoctorIdRouteImport } from './routes/doctor.$id'
+import { Route as ClinicIdRouteImport } from './routes/clinic.$id'
 import { Route as CitySlugRouteImport } from './routes/city.$slug'
 import { Route as TabsLabTestsRouteImport } from './routes/_tabs.lab-tests'
 import { Route as TabsHospitalsRouteImport } from './routes/_tabs.hospitals'
@@ -49,6 +50,11 @@ const HospitalIdRoute = HospitalIdRouteImport.update({
 const DoctorIdRoute = DoctorIdRouteImport.update({
   id: '/doctor/$id',
   path: '/doctor/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClinicIdRoute = ClinicIdRouteImport.update({
+  id: '/clinic/$id',
+  path: '/clinic/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CitySlugRoute = CitySlugRouteImport.update({
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/hospitals': typeof TabsHospitalsRoute
   '/lab-tests': typeof TabsLabTestsRoute
   '/city/$slug': typeof CitySlugRoute
+  '/clinic/$id': typeof ClinicIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/hospital/$id': typeof HospitalIdRoute
 }
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/hospitals': typeof TabsHospitalsRoute
   '/lab-tests': typeof TabsLabTestsRoute
   '/city/$slug': typeof CitySlugRoute
+  '/clinic/$id': typeof ClinicIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/': typeof TabsIndexRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/_tabs/hospitals': typeof TabsHospitalsRoute
   '/_tabs/lab-tests': typeof TabsLabTestsRoute
   '/city/$slug': typeof CitySlugRoute
+  '/clinic/$id': typeof ClinicIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/_tabs/': typeof TabsIndexRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/hospitals'
     | '/lab-tests'
     | '/city/$slug'
+    | '/clinic/$id'
     | '/doctor/$id'
     | '/hospital/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/hospitals'
     | '/lab-tests'
     | '/city/$slug'
+    | '/clinic/$id'
     | '/doctor/$id'
     | '/hospital/$id'
     | '/'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/_tabs/hospitals'
     | '/_tabs/lab-tests'
     | '/city/$slug'
+    | '/clinic/$id'
     | '/doctor/$id'
     | '/hospital/$id'
     | '/_tabs/'
@@ -171,6 +183,7 @@ export interface RootRouteChildren {
   BloodTestsRoute: typeof BloodTestsRoute
   HealthPackagesRoute: typeof HealthPackagesRoute
   CitySlugRoute: typeof CitySlugRoute
+  ClinicIdRoute: typeof ClinicIdRoute
   DoctorIdRoute: typeof DoctorIdRoute
   HospitalIdRoute: typeof HospitalIdRoute
 }
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       path: '/doctor/$id'
       fullPath: '/doctor/$id'
       preLoaderRoute: typeof DoctorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/clinic/$id': {
+      id: '/clinic/$id'
+      path: '/clinic/$id'
+      fullPath: '/clinic/$id'
+      preLoaderRoute: typeof ClinicIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/city/$slug': {
@@ -289,6 +309,7 @@ const rootRouteChildren: RootRouteChildren = {
   BloodTestsRoute: BloodTestsRoute,
   HealthPackagesRoute: HealthPackagesRoute,
   CitySlugRoute: CitySlugRoute,
+  ClinicIdRoute: ClinicIdRoute,
   DoctorIdRoute: DoctorIdRoute,
   HospitalIdRoute: HospitalIdRoute,
 }
