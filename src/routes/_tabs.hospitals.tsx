@@ -9,10 +9,8 @@ import {
   Mic,
   Search,
   ShieldCheck,
-  Sparkles,
   Tag,
   Clock3,
-  Hospital as HospitalIcon,
 } from "lucide-react";
 import { hospitals } from "@/lib/hospitals";
 import { HospitalCard } from "@/components/HospitalCard";
