@@ -68,14 +68,6 @@ function FindDoctors() {
     });
   }, [availableToday, verifiedOnly, gender, languages, treatments, specialties]);
 
-  const activeCount =
-    (availableToday ? 1 : 0) +
-    (verifiedOnly ? 1 : 0) +
-    (freeConsult ? 1 : 0) +
-    (gender !== "Any" ? 1 : 0) +
-    (languages.length ? 1 : 0) +
-    (treatments.length ? 1 : 0) +
-    (specialties.length ? 1 : 0);
 
   return (
     <div className="pb-8">
