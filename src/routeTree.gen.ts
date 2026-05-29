@@ -24,6 +24,7 @@ import { Route as TabsHospitalsRouteImport } from './routes/_tabs.hospitals'
 import { Route as TabsFindDoctorsRouteImport } from './routes/_tabs.find-doctors'
 import { Route as TabsExploreRouteImport } from './routes/_tabs.explore'
 import { Route as TabsClinicsRouteImport } from './routes/_tabs.clinics'
+import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
 
 const HealthPackagesRoute = HealthPackagesRouteImport.update({
   id: '/health-packages',
@@ -99,11 +100,17 @@ const TabsClinicsRoute = TabsClinicsRouteImport.update({
   path: '/clinics',
   getParentRoute: () => TabsRoute,
 } as any)
+const TabsAccountRoute = TabsAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => TabsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
   '/blood-tests': typeof BloodTestsRoute
   '/health-packages': typeof HealthPackagesRoute
+  '/account': typeof TabsAccountRoute
   '/clinics': typeof TabsClinicsRoute
   '/explore': typeof TabsExploreRoute
   '/find-doctors': typeof TabsFindDoctorsRoute
@@ -119,6 +126,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/blood-tests': typeof BloodTestsRoute
   '/health-packages': typeof HealthPackagesRoute
+  '/account': typeof TabsAccountRoute
   '/clinics': typeof TabsClinicsRoute
   '/explore': typeof TabsExploreRoute
   '/find-doctors': typeof TabsFindDoctorsRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/_tabs': typeof TabsRouteWithChildren
   '/blood-tests': typeof BloodTestsRoute
   '/health-packages': typeof HealthPackagesRoute
+  '/_tabs/account': typeof TabsAccountRoute
   '/_tabs/clinics': typeof TabsClinicsRoute
   '/_tabs/explore': typeof TabsExploreRoute
   '/_tabs/find-doctors': typeof TabsFindDoctorsRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blood-tests'
     | '/health-packages'
+    | '/account'
     | '/clinics'
     | '/explore'
     | '/find-doctors'
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
   to:
     | '/blood-tests'
     | '/health-packages'
+    | '/account'
     | '/clinics'
     | '/explore'
     | '/find-doctors'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/_tabs'
     | '/blood-tests'
     | '/health-packages'
+    | '/_tabs/account'
     | '/_tabs/clinics'
     | '/_tabs/explore'
     | '/_tabs/find-doctors'
@@ -321,10 +333,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TabsClinicsRouteImport
       parentRoute: typeof TabsRoute
     }
+    '/_tabs/account': {
+      id: '/_tabs/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof TabsAccountRouteImport
+      parentRoute: typeof TabsRoute
+    }
   }
 }
 
 interface TabsRouteChildren {
+  TabsAccountRoute: typeof TabsAccountRoute
   TabsClinicsRoute: typeof TabsClinicsRoute
   TabsExploreRoute: typeof TabsExploreRoute
   TabsFindDoctorsRoute: typeof TabsFindDoctorsRoute
@@ -334,6 +354,7 @@ interface TabsRouteChildren {
 }
 
 const TabsRouteChildren: TabsRouteChildren = {
+  TabsAccountRoute: TabsAccountRoute,
   TabsClinicsRoute: TabsClinicsRoute,
   TabsExploreRoute: TabsExploreRoute,
   TabsFindDoctorsRoute: TabsFindDoctorsRoute,
@@ -358,3 +379,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
