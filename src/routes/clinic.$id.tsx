@@ -54,7 +54,7 @@ export const Route = createFileRoute("/clinic/$id")({
 const SERVICE_ICONS = [Stethoscope, Pill, Syringe, Scissors, HeartPulse, ShieldCheck];
 
 function ClinicDetail() {
-  const { clinic } = Route.useLoaderData();
+  const { clinic } = Route.useLoaderData() as { clinic: Clinic };
   const [reachOpen, setReachOpen] = useState(false);
   const [followed, setFollowed] = useState(false);
 
