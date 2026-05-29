@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -18,11 +19,11 @@ import {
   Navigation,
   Phone,
   Scissors,
+  Send,
   Share2,
   Shield,
   ShieldCheck,
   ShieldPlus,
-  Smile,
   Sparkles,
   Star,
   Stethoscope,
@@ -31,6 +32,7 @@ import {
   Clock3,
 } from "lucide-react";
 import { getHospital } from "@/lib/hospitals";
+import { ReachOutDialog } from "@/components/ReachOutDialog";
 
 export const Route = createFileRoute("/hospital/$id")({
   loader: ({ params }) => {
