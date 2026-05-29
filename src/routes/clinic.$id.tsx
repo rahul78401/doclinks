@@ -14,7 +14,7 @@ import {
   Linkedin,
   MapPin,
   MessageCircle,
-  Navigation,
+  
   Phone,
   Pill,
   Plus,
