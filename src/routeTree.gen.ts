@@ -13,6 +13,7 @@ import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
 import { Route as HospitalIdRouteImport } from './routes/hospital.$id'
 import { Route as DoctorIdRouteImport } from './routes/doctor.$id'
+import { Route as CitySlugRouteImport } from './routes/city.$slug'
 import { Route as TabsLabTestsRouteImport } from './routes/_tabs.lab-tests'
 import { Route as TabsHospitalsRouteImport } from './routes/_tabs.hospitals'
 import { Route as TabsFindDoctorsRouteImport } from './routes/_tabs.find-doctors'
@@ -36,6 +37,11 @@ const HospitalIdRoute = HospitalIdRouteImport.update({
 const DoctorIdRoute = DoctorIdRouteImport.update({
   id: '/doctor/$id',
   path: '/doctor/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CitySlugRoute = CitySlugRouteImport.update({
+  id: '/city/$slug',
+  path: '/city/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TabsLabTestsRoute = TabsLabTestsRouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/find-doctors': typeof TabsFindDoctorsRoute
   '/hospitals': typeof TabsHospitalsRoute
   '/lab-tests': typeof TabsLabTestsRoute
+  '/city/$slug': typeof CitySlugRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/hospital/$id': typeof HospitalIdRoute
 }
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/find-doctors': typeof TabsFindDoctorsRoute
   '/hospitals': typeof TabsHospitalsRoute
   '/lab-tests': typeof TabsLabTestsRoute
+  '/city/$slug': typeof CitySlugRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/': typeof TabsIndexRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/_tabs/find-doctors': typeof TabsFindDoctorsRoute
   '/_tabs/hospitals': typeof TabsHospitalsRoute
   '/_tabs/lab-tests': typeof TabsLabTestsRoute
+  '/city/$slug': typeof CitySlugRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/hospital/$id': typeof HospitalIdRoute
   '/_tabs/': typeof TabsIndexRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/find-doctors'
     | '/hospitals'
     | '/lab-tests'
+    | '/city/$slug'
     | '/doctor/$id'
     | '/hospital/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
     | '/find-doctors'
     | '/hospitals'
     | '/lab-tests'
+    | '/city/$slug'
     | '/doctor/$id'
     | '/hospital/$id'
     | '/'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
     | '/_tabs/find-doctors'
     | '/_tabs/hospitals'
     | '/_tabs/lab-tests'
+    | '/city/$slug'
     | '/doctor/$id'
     | '/hospital/$id'
     | '/_tabs/'
@@ -132,6 +144,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
+  CitySlugRoute: typeof CitySlugRoute
   DoctorIdRoute: typeof DoctorIdRoute
   HospitalIdRoute: typeof HospitalIdRoute
 }
@@ -164,6 +177,13 @@ declare module '@tanstack/react-router' {
       path: '/doctor/$id'
       fullPath: '/doctor/$id'
       preLoaderRoute: typeof DoctorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/city/$slug': {
+      id: '/city/$slug'
+      path: '/city/$slug'
+      fullPath: '/city/$slug'
+      preLoaderRoute: typeof CitySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_tabs/lab-tests': {
@@ -226,9 +246,20 @@ const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
+  CitySlugRoute: CitySlugRoute,
   DoctorIdRoute: DoctorIdRoute,
   HospitalIdRoute: HospitalIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
