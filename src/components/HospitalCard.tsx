@@ -119,13 +119,6 @@ export function HospitalCard({ hospital }: { hospital: Hospital }) {
           )}
         </div>
 
-        {/* Stats row */}
-        <div className="mt-3 grid grid-cols-3 gap-2 rounded-2xl bg-muted/60 p-2.5">
-          <Stat icon={<Stethoscope className="h-3.5 w-3.5" />} value={`${hospital.stats.doctors}+`} label="Doctors" />
-          <Stat icon={<ShieldCheck className="h-3.5 w-3.5" />} value={`${hospital.stats.experience}y`} label="Trusted" />
-          <Stat icon={<Users className="h-3.5 w-3.5" />} value={hospital.stats.followers} label="Followers" />
-        </div>
-
         {/* CTAs */}
         <div className="mt-3 flex items-center gap-2">
           <button
@@ -141,23 +134,9 @@ export function HospitalCard({ hospital }: { hospital: Hospital }) {
           >
             <MessageCircle className="h-4 w-4" />
           </button>
-          <span className="h-10 px-3.5 inline-flex items-center justify-center gap-1.5 rounded-full bg-surface border border-border/60 text-foreground text-[12px] font-semibold">
-            View Profile
-          </span>
         </div>
       </div>
     </Link>
   );
 }
 
-function Stat({ icon, value, label }: { icon: React.ReactNode; value: string; label: string }) {
-  return (
-    <div className="flex flex-col items-center">
-      <div className="flex items-center gap-1 text-foreground">
-        <span className="text-primary">{icon}</span>
-        <p className="text-[12.5px] font-display font-bold leading-none">{value}</p>
-      </div>
-      <p className="text-[10px] text-muted-foreground mt-1">{label}</p>
-    </div>
-  );
-}
