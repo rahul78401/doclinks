@@ -5,8 +5,14 @@ import {
   Search, Phone, MessageCircle, ShieldCheck, MapPin, ChevronRight,
   Activity, Users, CalendarCheck, Sparkles, BookOpen, ArrowUpRight,
   Mail, Calendar, Droplet, Home, AlertCircle, Pencil, Download,
-  Share2, Bell, Lock, LogOut, Info, ChevronDown, Plus,
+  Share2, Bell, Lock, LogOut, Info, ChevronDown, Plus, Trash2,
+  ScrollText, CheckCircle2, Building2, Clock3, X,
 } from "lucide-react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
