@@ -364,7 +364,7 @@ function ClinicDetail() {
       <ReachOutDialog
         open={reachOpen}
         onOpenChange={setReachOpen}
-        recipientName={clinic.name}
+        recipient={clinic.name}
       />
     </div>
   );
