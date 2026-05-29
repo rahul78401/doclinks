@@ -19,7 +19,7 @@ export function HospitalCard({ hospital }: { hospital: Hospital }) {
       className="block bg-surface rounded-3xl border border-border/60 shadow-card hover:shadow-float transition-shadow overflow-hidden animate-slide-up"
     >
       {/* Image header */}
-      <div className="relative h-36 w-full overflow-hidden">
+      <div className="relative h-44 w-full overflow-hidden">
         <img
           src={hospital.cover}
           alt={hospital.name}
