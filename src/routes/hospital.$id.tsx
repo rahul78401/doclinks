@@ -137,12 +137,23 @@ function HospitalDetail() {
               ))}
             </div>
 
-            <h1 className="mt-3 text-[22px] leading-tight font-display font-bold text-foreground">
-              {hospital.name}
-            </h1>
-            <p className="text-[12.5px] text-muted-foreground mt-0.5">
-              {hospital.type} · {hospital.category}
-            </p>
+            <div className="mt-3 flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h1 className="text-[22px] leading-tight font-display font-bold text-foreground">
+                  {hospital.name}
+                </h1>
+                <p className="text-[12.5px] text-muted-foreground mt-0.5">
+                  {hospital.type} · {hospital.category}
+                </p>
+              </div>
+              <button
+                aria-label="Share"
+                className="h-10 w-10 grid place-items-center rounded-full bg-surface border border-border/60 shadow-card text-foreground shrink-0"
+              >
+                <Share2 className="h-4 w-4" />
+              </button>
+            </div>
+
 
             <div className="mt-2 flex items-start gap-1.5 text-[12.5px] text-foreground">
               <MapPin className="h-4 w-4 text-primary mt-0.5 shrink-0" />
