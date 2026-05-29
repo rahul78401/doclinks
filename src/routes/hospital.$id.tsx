@@ -86,6 +86,8 @@ const WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function HospitalDetail() {
   const { hospital } = Route.useLoaderData() as { hospital: import("@/lib/hospitals").Hospital };
+  const [reachOpen, setReachOpen] = useState(false);
+
 
   return (
     <div className="min-h-screen bg-background pb-28">
