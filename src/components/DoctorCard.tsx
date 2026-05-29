@@ -79,9 +79,6 @@ export function DoctorCard({ doctor }: { doctor: Doctor }) {
           </p>
           <p className="text-[15px] font-display font-bold text-foreground truncate">
             {formatFee(doctor.fee)}
-            <span className="ml-2 text-[10.5px] font-medium text-muted-foreground">
-              {doctor.availableToday ? `Avl. ${doctor.nextSlot}` : doctor.nextSlot}
-            </span>
           </p>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
