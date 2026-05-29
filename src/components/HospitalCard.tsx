@@ -8,8 +8,6 @@ import {
   Phone,
   ShieldCheck,
   Star,
-  Stethoscope,
-  Users,
 } from "lucide-react";
 import type { Hospital } from "@/lib/hospitals";
 
