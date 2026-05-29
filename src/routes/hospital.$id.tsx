@@ -368,7 +368,15 @@ function HospitalDetail() {
         <div className="max-w-md mx-auto px-4 pb-[max(env(safe-area-inset-bottom),14px)] pt-3">
           <div className="glass-strong rounded-2xl border border-border/60 shadow-float p-2 flex items-center gap-2">
             <button className="flex-1 h-11 inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-brand text-primary-foreground text-[13px] font-semibold shadow-glow">
-              <Phone className="h-4 w-4" /> Call Hospital
+              <Phone className="h-4 w-4" /> Call Now
+            </button>
+            <button
+              type="button"
+              onClick={() => setReachOpen(true)}
+              aria-label="Reach Out"
+              className="h-11 w-11 grid place-items-center rounded-xl bg-primary-soft text-primary border border-primary/20"
+            >
+              <Send className="h-4 w-4" />
             </button>
             <button
               aria-label="WhatsApp"
@@ -385,9 +393,16 @@ function HospitalDetail() {
           </div>
         </div>
       </div>
+
+      <ReachOutDialog
+        open={reachOpen}
+        onOpenChange={setReachOpen}
+        recipient={hospital.name}
+      />
     </div>
   );
 }
+
 
 function Section({
   title,
