@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { User } from "lucide-react";
 import { TabPlaceholder } from "@/components/TabPlaceholder";
 
-export const Route = createFileRoute("/_tabs/account")({
+export const Route = createFileRoute("/_tabs/explore")({
   component: () => (
     <TabPlaceholder
       icon={User}
