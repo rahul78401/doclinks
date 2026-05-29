@@ -1,4 +1,5 @@
 import { Bell, ChevronDown, MapPin } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Logo } from "./Logo";
 
 export function AppHeader() {
@@ -13,9 +14,13 @@ export function AppHeader() {
             <Bell className="h-[18px] w-[18px] text-foreground" />
             <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary ring-2 ring-surface" />
           </button>
-          <div className="h-10 w-10 rounded-full bg-gradient-brand grid place-items-center text-primary-foreground font-semibold text-sm shadow-card">
+          <Link
+            to="/account"
+            aria-label="Open your account"
+            className="h-10 w-10 rounded-full bg-gradient-brand grid place-items-center text-primary-foreground font-semibold text-sm shadow-card transition-transform active:scale-95"
+          >
             AS
-          </div>
+          </Link>
         </div>
       </div>
       <button className="mx-5 mb-3 flex items-center gap-2 text-left">
