@@ -109,23 +109,6 @@ function FindDoctors() {
             </button>
           </div>
 
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            {[
-              { k: "10k+", v: "Verified" },
-              { k: "40+", v: "Specialties" },
-              { k: "4.9★", v: "Avg. Rating" },
-            ].map((s) => (
-              <div
-                key={s.v}
-                className="rounded-2xl bg-surface/85 backdrop-blur border border-border/50 px-3 py-2 text-center"
-              >
-                <p className="text-[13px] font-display font-bold text-foreground leading-none">
-                  {s.k}
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-1">{s.v}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
