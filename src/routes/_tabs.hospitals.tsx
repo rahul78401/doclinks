@@ -54,12 +54,6 @@ function HospitalsListing() {
     });
   }, [verifiedOnly, emergencyOnly, openNow, services]);
 
-  const activeCount =
-    (verifiedOnly ? 1 : 0) +
-    (emergencyOnly ? 1 : 0) +
-    (openNow ? 1 : 0) +
-    (services.length ? 1 : 0) +
-    (languages.length ? 1 : 0);
 
   return (
     <div className="pb-8">
