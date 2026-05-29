@@ -9,10 +9,8 @@ import {
   Mic,
   Search,
   ShieldCheck,
-  Sparkles,
   Tag,
   Clock3,
-  Hospital as HospitalIcon,
 } from "lucide-react";
 import { hospitals } from "@/lib/hospitals";
 import { HospitalCard } from "@/components/HospitalCard";
@@ -56,12 +54,6 @@ function HospitalsListing() {
     });
   }, [verifiedOnly, emergencyOnly, openNow, services]);
 
-  const activeCount =
-    (verifiedOnly ? 1 : 0) +
-    (emergencyOnly ? 1 : 0) +
-    (openNow ? 1 : 0) +
-    (services.length ? 1 : 0) +
-    (languages.length ? 1 : 0);
 
   return (
     <div className="pb-8">
@@ -151,35 +143,8 @@ function HospitalsListing() {
         />
       </div>
 
-      {/* Accreditation rail */}
-      <div className="mt-1 px-5 flex items-center gap-2 text-[11.5px] font-semibold text-muted-foreground">
-        <HospitalIcon className="h-3.5 w-3.5" />
-        Browse by accreditation
-      </div>
-      <div className="mt-2 flex gap-2 overflow-x-auto no-scrollbar px-5 pb-1">
-        {["NABH", "NABL", "JCI", "ISO 9001", "Multi-Speciality", "Tertiary"].map((a) => (
-          <span
-            key={a}
-            className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-surface border border-border/60 px-3 py-1.5 text-[11.5px] font-semibold text-foreground shadow-card"
-          >
-            <ShieldCheck className="h-3 w-3 text-primary" /> {a}
-          </span>
-        ))}
-      </div>
+      <div className="mt-5 px-5 space-y-4">
 
-      <div className="mt-5 px-5 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
-          <p className="text-[12px] font-semibold text-foreground">
-            {filtered.length} hospitals · {activeCount} filters
-          </p>
-        </div>
-        <button className="inline-flex items-center gap-1 text-[12px] font-semibold text-foreground bg-surface border border-border/60 rounded-full px-3 py-1.5 shadow-card">
-          Most Contacted <ChevronDown className="h-3 w-3" />
-        </button>
-      </div>
-
-      <div className="mt-3 px-5 space-y-4">
         {filtered.map((h) => (
           <HospitalCard key={h.id} hospital={h} />
         ))}

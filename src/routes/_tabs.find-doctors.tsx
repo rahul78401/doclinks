@@ -6,7 +6,6 @@ import {
   ChevronDown,
   Mic,
   Search,
-  Sparkles,
   Tag,
   Wallet,
   MapPin,
@@ -69,14 +68,6 @@ function FindDoctors() {
     });
   }, [availableToday, verifiedOnly, gender, languages, treatments, specialties]);
 
-  const activeCount =
-    (availableToday ? 1 : 0) +
-    (verifiedOnly ? 1 : 0) +
-    (freeConsult ? 1 : 0) +
-    (gender !== "Any" ? 1 : 0) +
-    (languages.length ? 1 : 0) +
-    (treatments.length ? 1 : 0) +
-    (specialties.length ? 1 : 0);
 
   return (
     <div className="pb-8">
@@ -109,23 +100,6 @@ function FindDoctors() {
             </button>
           </div>
 
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            {[
-              { k: "10k+", v: "Verified" },
-              { k: "40+", v: "Specialties" },
-              { k: "4.9★", v: "Avg. Rating" },
-            ].map((s) => (
-              <div
-                key={s.v}
-                className="rounded-2xl bg-surface/85 backdrop-blur border border-border/50 px-3 py-2 text-center"
-              >
-                <p className="text-[13px] font-display font-bold text-foreground leading-none">
-                  {s.k}
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-1">{s.v}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -228,17 +202,6 @@ function FindDoctors() {
         })}
       </div>
 
-      <div className="mt-5 px-5 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
-          <p className="text-[12px] font-semibold text-foreground">
-            {filtered.length} doctors · {activeCount} filters
-          </p>
-        </div>
-        <button className="inline-flex items-center gap-1 text-[12px] font-semibold text-foreground bg-surface border border-border/60 rounded-full px-3 py-1.5 shadow-card">
-          Highest Rated <ChevronDown className="h-3 w-3" />
-        </button>
-      </div>
 
       <div className="mt-3 px-5 space-y-3">
         {filtered.map((d) => (

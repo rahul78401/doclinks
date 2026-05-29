@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -18,11 +19,11 @@ import {
   Navigation,
   Phone,
   Scissors,
+  Send,
   Share2,
   Shield,
   ShieldCheck,
   ShieldPlus,
-  Smile,
   Sparkles,
   Star,
   Stethoscope,
@@ -31,6 +32,7 @@ import {
   Clock3,
 } from "lucide-react";
 import { getHospital } from "@/lib/hospitals";
+import { ReachOutDialog } from "@/components/ReachOutDialog";
 
 export const Route = createFileRoute("/hospital/$id")({
   loader: ({ params }) => {
@@ -84,6 +86,8 @@ const WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 function HospitalDetail() {
   const { hospital } = Route.useLoaderData() as { hospital: import("@/lib/hospitals").Hospital };
+  const [reachOpen, setReachOpen] = useState(false);
+
 
   return (
     <div className="min-h-screen bg-background pb-28">
@@ -107,9 +111,6 @@ function HospitalDetail() {
               <ArrowLeft className="h-4 w-4" />
             </Link>
             <div className="flex items-center gap-2">
-              <button className="h-10 w-10 grid place-items-center rounded-full bg-surface/90 backdrop-blur shadow-card text-foreground" aria-label="Share">
-                <Share2 className="h-4 w-4" />
-              </button>
               <button className="h-10 w-10 grid place-items-center rounded-full bg-surface/90 backdrop-blur shadow-card text-foreground" aria-label="Save">
                 <Bookmark className="h-4 w-4" />
               </button>
@@ -136,12 +137,23 @@ function HospitalDetail() {
               ))}
             </div>
 
-            <h1 className="mt-3 text-[22px] leading-tight font-display font-bold text-foreground">
-              {hospital.name}
-            </h1>
-            <p className="text-[12.5px] text-muted-foreground mt-0.5">
-              {hospital.type} · {hospital.category}
-            </p>
+            <div className="mt-3 flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h1 className="text-[22px] leading-tight font-display font-bold text-foreground">
+                  {hospital.name}
+                </h1>
+                <p className="text-[12.5px] text-muted-foreground mt-0.5">
+                  {hospital.type} · {hospital.category}
+                </p>
+              </div>
+              <button
+                aria-label="Share"
+                className="h-10 w-10 grid place-items-center rounded-full bg-surface border border-border/60 shadow-card text-foreground shrink-0"
+              >
+                <Share2 className="h-4 w-4" />
+              </button>
+            </div>
+
 
             <div className="mt-2 flex items-start gap-1.5 text-[12.5px] text-foreground">
               <MapPin className="h-4 w-4 text-primary mt-0.5 shrink-0" />
@@ -356,7 +368,15 @@ function HospitalDetail() {
         <div className="max-w-md mx-auto px-4 pb-[max(env(safe-area-inset-bottom),14px)] pt-3">
           <div className="glass-strong rounded-2xl border border-border/60 shadow-float p-2 flex items-center gap-2">
             <button className="flex-1 h-11 inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-brand text-primary-foreground text-[13px] font-semibold shadow-glow">
-              <Phone className="h-4 w-4" /> Call Hospital
+              <Phone className="h-4 w-4" /> Call Now
+            </button>
+            <button
+              type="button"
+              onClick={() => setReachOpen(true)}
+              aria-label="Reach Out"
+              className="h-11 w-11 grid place-items-center rounded-xl bg-primary-soft text-primary border border-primary/20"
+            >
+              <Send className="h-4 w-4" />
             </button>
             <button
               aria-label="WhatsApp"
@@ -373,9 +393,16 @@ function HospitalDetail() {
           </div>
         </div>
       </div>
+
+      <ReachOutDialog
+        open={reachOpen}
+        onOpenChange={setReachOpen}
+        recipient={hospital.name}
+      />
     </div>
   );
 }
+
 
 function Section({
   title,
