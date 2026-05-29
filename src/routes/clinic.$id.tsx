@@ -19,6 +19,7 @@ import {
   Pill,
   Plus,
   Scissors,
+  Send,
   Share2,
   ShieldCheck,
   Stethoscope,
