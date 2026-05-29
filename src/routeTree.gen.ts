@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as HealthPackagesRouteImport } from './routes/health-packages'
+import { Route as BloodTestsRouteImport } from './routes/blood-tests'
 import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
 import { Route as HospitalIdRouteImport } from './routes/hospital.$id'
@@ -20,6 +22,16 @@ import { Route as TabsFindDoctorsRouteImport } from './routes/_tabs.find-doctors
 import { Route as TabsExploreRouteImport } from './routes/_tabs.explore'
 import { Route as TabsClinicsRouteImport } from './routes/_tabs.clinics'
 
+const HealthPackagesRoute = HealthPackagesRouteImport.update({
+  id: '/health-packages',
+  path: '/health-packages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BloodTestsRoute = BloodTestsRouteImport.update({
+  id: '/blood-tests',
+  path: '/blood-tests',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TabsRoute = TabsRouteImport.update({
   id: '/_tabs',
   getParentRoute: () => rootRouteImport,
@@ -72,6 +84,8 @@ const TabsClinicsRoute = TabsClinicsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
+  '/blood-tests': typeof BloodTestsRoute
+  '/health-packages': typeof HealthPackagesRoute
   '/clinics': typeof TabsClinicsRoute
   '/explore': typeof TabsExploreRoute
   '/find-doctors': typeof TabsFindDoctorsRoute
@@ -82,6 +96,8 @@ export interface FileRoutesByFullPath {
   '/hospital/$id': typeof HospitalIdRoute
 }
 export interface FileRoutesByTo {
+  '/blood-tests': typeof BloodTestsRoute
+  '/health-packages': typeof HealthPackagesRoute
   '/clinics': typeof TabsClinicsRoute
   '/explore': typeof TabsExploreRoute
   '/find-doctors': typeof TabsFindDoctorsRoute
@@ -95,6 +111,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tabs': typeof TabsRouteWithChildren
+  '/blood-tests': typeof BloodTestsRoute
+  '/health-packages': typeof HealthPackagesRoute
   '/_tabs/clinics': typeof TabsClinicsRoute
   '/_tabs/explore': typeof TabsExploreRoute
   '/_tabs/find-doctors': typeof TabsFindDoctorsRoute
@@ -109,6 +127,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/blood-tests'
+    | '/health-packages'
     | '/clinics'
     | '/explore'
     | '/find-doctors'
@@ -119,6 +139,8 @@ export interface FileRouteTypes {
     | '/hospital/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/blood-tests'
+    | '/health-packages'
     | '/clinics'
     | '/explore'
     | '/find-doctors'
@@ -131,6 +153,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_tabs'
+    | '/blood-tests'
+    | '/health-packages'
     | '/_tabs/clinics'
     | '/_tabs/explore'
     | '/_tabs/find-doctors'
@@ -144,6 +168,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
+  BloodTestsRoute: typeof BloodTestsRoute
+  HealthPackagesRoute: typeof HealthPackagesRoute
   CitySlugRoute: typeof CitySlugRoute
   DoctorIdRoute: typeof DoctorIdRoute
   HospitalIdRoute: typeof HospitalIdRoute
@@ -151,6 +177,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/health-packages': {
+      id: '/health-packages'
+      path: '/health-packages'
+      fullPath: '/health-packages'
+      preLoaderRoute: typeof HealthPackagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blood-tests': {
+      id: '/blood-tests'
+      path: '/blood-tests'
+      fullPath: '/blood-tests'
+      preLoaderRoute: typeof BloodTestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_tabs': {
       id: '/_tabs'
       path: ''
@@ -246,6 +286,8 @@ const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
+  BloodTestsRoute: BloodTestsRoute,
+  HealthPackagesRoute: HealthPackagesRoute,
   CitySlugRoute: CitySlugRoute,
   DoctorIdRoute: DoctorIdRoute,
   HospitalIdRoute: HospitalIdRoute,
@@ -253,3 +295,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
