@@ -3,10 +3,8 @@ import { useMemo, useState } from "react";
 import {
   BadgeCheck,
   CalendarClock,
-  ChevronDown,
   Mic,
   Search,
-  Sparkles,
   Tag,
   Wallet,
   MapPin,
