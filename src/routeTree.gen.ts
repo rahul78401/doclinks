@@ -25,6 +25,7 @@ import { Route as TabsFindDoctorsRouteImport } from './routes/_tabs.find-doctors
 import { Route as TabsExploreRouteImport } from './routes/_tabs.explore'
 import { Route as TabsClinicsRouteImport } from './routes/_tabs.clinics'
 import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
+import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
 
 const HealthPackagesRoute = HealthPackagesRouteImport.update({
   id: '/health-packages',
@@ -98,6 +99,11 @@ const TabsExploreRoute = TabsExploreRouteImport.update({
 const TabsClinicsRoute = TabsClinicsRouteImport.update({
   id: '/clinics',
   path: '/clinics',
+  getParentRoute: () => TabsRoute,
+} as any)
+const TabsAccountRoute = TabsAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => TabsRoute,
 } as any)
 const TabsAccountRoute = TabsAccountRouteImport.update({
@@ -379,13 +385,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
