@@ -13,10 +13,12 @@ import { Route as HealthPackagesRouteImport } from './routes/health-packages'
 import { Route as BloodTestsRouteImport } from './routes/blood-tests'
 import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
+import { Route as MagazineIdRouteImport } from './routes/magazine.$id'
 import { Route as HospitalIdRouteImport } from './routes/hospital.$id'
 import { Route as DoctorIdRouteImport } from './routes/doctor.$id'
 import { Route as ClinicIdRouteImport } from './routes/clinic.$id'
 import { Route as CitySlugRouteImport } from './routes/city.$slug'
+import { Route as ArticleSlugRouteImport } from './routes/article.$slug'
 import { Route as TabsLabTestsRouteImport } from './routes/_tabs.lab-tests'
 import { Route as TabsHospitalsRouteImport } from './routes/_tabs.hospitals'
 import { Route as TabsFindDoctorsRouteImport } from './routes/_tabs.find-doctors'
@@ -42,6 +44,11 @@ const TabsIndexRoute = TabsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => TabsRoute,
 } as any)
+const MagazineIdRoute = MagazineIdRouteImport.update({
+  id: '/magazine/$id',
+  path: '/magazine/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HospitalIdRoute = HospitalIdRouteImport.update({
   id: '/hospital/$id',
   path: '/hospital/$id',
@@ -60,6 +67,11 @@ const ClinicIdRoute = ClinicIdRouteImport.update({
 const CitySlugRoute = CitySlugRouteImport.update({
   id: '/city/$slug',
   path: '/city/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticleSlugRoute = ArticleSlugRouteImport.update({
+  id: '/article/$slug',
+  path: '/article/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TabsLabTestsRoute = TabsLabTestsRouteImport.update({
@@ -97,10 +109,12 @@ export interface FileRoutesByFullPath {
   '/find-doctors': typeof TabsFindDoctorsRoute
   '/hospitals': typeof TabsHospitalsRoute
   '/lab-tests': typeof TabsLabTestsRoute
+  '/article/$slug': typeof ArticleSlugRoute
   '/city/$slug': typeof CitySlugRoute
   '/clinic/$id': typeof ClinicIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/hospital/$id': typeof HospitalIdRoute
+  '/magazine/$id': typeof MagazineIdRoute
 }
 export interface FileRoutesByTo {
   '/blood-tests': typeof BloodTestsRoute
@@ -110,10 +124,12 @@ export interface FileRoutesByTo {
   '/find-doctors': typeof TabsFindDoctorsRoute
   '/hospitals': typeof TabsHospitalsRoute
   '/lab-tests': typeof TabsLabTestsRoute
+  '/article/$slug': typeof ArticleSlugRoute
   '/city/$slug': typeof CitySlugRoute
   '/clinic/$id': typeof ClinicIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/hospital/$id': typeof HospitalIdRoute
+  '/magazine/$id': typeof MagazineIdRoute
   '/': typeof TabsIndexRoute
 }
 export interface FileRoutesById {
@@ -126,10 +142,12 @@ export interface FileRoutesById {
   '/_tabs/find-doctors': typeof TabsFindDoctorsRoute
   '/_tabs/hospitals': typeof TabsHospitalsRoute
   '/_tabs/lab-tests': typeof TabsLabTestsRoute
+  '/article/$slug': typeof ArticleSlugRoute
   '/city/$slug': typeof CitySlugRoute
   '/clinic/$id': typeof ClinicIdRoute
   '/doctor/$id': typeof DoctorIdRoute
   '/hospital/$id': typeof HospitalIdRoute
+  '/magazine/$id': typeof MagazineIdRoute
   '/_tabs/': typeof TabsIndexRoute
 }
 export interface FileRouteTypes {
@@ -143,10 +161,12 @@ export interface FileRouteTypes {
     | '/find-doctors'
     | '/hospitals'
     | '/lab-tests'
+    | '/article/$slug'
     | '/city/$slug'
     | '/clinic/$id'
     | '/doctor/$id'
     | '/hospital/$id'
+    | '/magazine/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/blood-tests'
@@ -156,10 +176,12 @@ export interface FileRouteTypes {
     | '/find-doctors'
     | '/hospitals'
     | '/lab-tests'
+    | '/article/$slug'
     | '/city/$slug'
     | '/clinic/$id'
     | '/doctor/$id'
     | '/hospital/$id'
+    | '/magazine/$id'
     | '/'
   id:
     | '__root__'
@@ -171,10 +193,12 @@ export interface FileRouteTypes {
     | '/_tabs/find-doctors'
     | '/_tabs/hospitals'
     | '/_tabs/lab-tests'
+    | '/article/$slug'
     | '/city/$slug'
     | '/clinic/$id'
     | '/doctor/$id'
     | '/hospital/$id'
+    | '/magazine/$id'
     | '/_tabs/'
   fileRoutesById: FileRoutesById
 }
@@ -182,10 +206,12 @@ export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
   BloodTestsRoute: typeof BloodTestsRoute
   HealthPackagesRoute: typeof HealthPackagesRoute
+  ArticleSlugRoute: typeof ArticleSlugRoute
   CitySlugRoute: typeof CitySlugRoute
   ClinicIdRoute: typeof ClinicIdRoute
   DoctorIdRoute: typeof DoctorIdRoute
   HospitalIdRoute: typeof HospitalIdRoute
+  MagazineIdRoute: typeof MagazineIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -218,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TabsIndexRouteImport
       parentRoute: typeof TabsRoute
     }
+    '/magazine/$id': {
+      id: '/magazine/$id'
+      path: '/magazine/$id'
+      fullPath: '/magazine/$id'
+      preLoaderRoute: typeof MagazineIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/hospital/$id': {
       id: '/hospital/$id'
       path: '/hospital/$id'
@@ -244,6 +277,13 @@ declare module '@tanstack/react-router' {
       path: '/city/$slug'
       fullPath: '/city/$slug'
       preLoaderRoute: typeof CitySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/article/$slug': {
+      id: '/article/$slug'
+      path: '/article/$slug'
+      fullPath: '/article/$slug'
+      preLoaderRoute: typeof ArticleSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_tabs/lab-tests': {
@@ -308,10 +348,12 @@ const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
   BloodTestsRoute: BloodTestsRoute,
   HealthPackagesRoute: HealthPackagesRoute,
+  ArticleSlugRoute: ArticleSlugRoute,
   CitySlugRoute: CitySlugRoute,
   ClinicIdRoute: ClinicIdRoute,
   DoctorIdRoute: DoctorIdRoute,
   HospitalIdRoute: HospitalIdRoute,
+  MagazineIdRoute: MagazineIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
