@@ -94,58 +94,51 @@ function Dashboard() {
 
 function HeroCard() {
   return (
-    <section className="relative overflow-hidden rounded-[28px] bg-gradient-hero border border-border/60 shadow-card p-6">
-      <div className="absolute -top-16 -right-12 h-44 w-44 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-primary-glow/20 blur-3xl pointer-events-none" />
+    <section className="relative overflow-hidden rounded-[32px] border border-border/60 shadow-card p-6 bg-gradient-hero">
+      {/* layered glow */}
+      <div className="absolute -top-24 -right-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-primary-glow/25 blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 opacity-[0.06] pointer-events-none"
+           style={{ backgroundImage: "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)", backgroundSize: "18px 18px" }} />
+
+      {/* floating micro card top-right */}
+      <div className="absolute top-5 right-5 flex items-center gap-2 rounded-2xl bg-surface/85 backdrop-blur border border-border/60 px-3 py-1.5 shadow-card">
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inset-0 rounded-full bg-success animate-ping opacity-60" />
+          <span className="relative rounded-full bg-success h-2 w-2" />
+        </span>
+        <span className="text-[11px] font-semibold text-foreground">All set</span>
+      </div>
 
       <div className="relative">
-        <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-primary font-semibold">
-          <Sparkles className="h-3.5 w-3.5" />
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-surface/80 border border-border/60 px-2.5 py-1 text-[10.5px] uppercase tracking-wider text-primary font-bold shadow-card">
+          <Sparkles className="h-3 w-3" />
           Your Health Hub
         </div>
-        <h1 className="mt-2 text-[26px] leading-tight font-bold text-foreground font-display">
-          Welcome back, <span className="text-primary">{user.firstName}</span>
+        <h1 className="mt-4 text-[30px] leading-[1.05] font-bold text-foreground font-display tracking-tight">
+          Welcome back,<br />
+          <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">{user.firstName}.</span>
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground leading-relaxed text-balance">
-          Find the best doctors near you and connect instantly with verified healthcare providers.
+        <p className="mt-3 text-[13.5px] text-muted-foreground leading-relaxed text-balance max-w-[320px]">
+          A calmer way to find trusted doctors and stay on top of your care.
         </p>
 
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-6 flex flex-wrap gap-2">
           <Link
             to="/find-doctors"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-brand text-primary-foreground px-5 py-2.5 text-sm font-semibold shadow-glow"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-brand text-primary-foreground px-5 py-2.5 text-[13px] font-semibold shadow-glow"
           >
             <Search className="h-4 w-4" /> Find Doctors
           </Link>
           <Link
             to="/explore"
-            className="inline-flex items-center gap-2 rounded-full bg-surface border border-border/70 text-foreground px-5 py-2.5 text-sm font-semibold shadow-card"
+            className="inline-flex items-center gap-2 rounded-full bg-surface/90 backdrop-blur border border-border/70 text-foreground px-5 py-2.5 text-[13px] font-semibold shadow-card"
           >
             <Compass className="h-4 w-4" /> Explore
           </Link>
         </div>
-
-        {/* Floating mini-stat */}
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          <FloatPill icon={ShieldCheck} label="Verified" value="100% Trusted" />
-          <FloatPill icon={Activity} label="Today" value="3 New Doctors" />
-        </div>
       </div>
     </section>
-  );
-}
-
-function FloatPill({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
-  return (
-    <div className="rounded-2xl bg-surface/80 backdrop-blur border border-border/60 p-3 flex items-center gap-3">
-      <span className="h-9 w-9 grid place-items-center rounded-xl bg-primary-soft text-primary">
-        <Icon className="h-[18px] w-[18px]" strokeWidth={2.2} />
-      </span>
-      <div className="leading-tight">
-        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{label}</p>
-        <p className="text-[13px] font-semibold text-foreground">{value}</p>
-      </div>
-    </div>
   );
 }
 
