@@ -375,23 +375,127 @@ function ArticlesAndMagazines() {
 }
 
 function SettingsCard() {
-  const items = [
+  const items: { icon: any; label: string; to?: string; href?: string }[] = [
     { icon: Bell, label: "Notifications" },
     { icon: Lock, label: "Privacy & Security" },
+    { icon: ScrollText, label: "Legal Center", to: "/legal" },
     { icon: Info, label: "Help & Support" },
-    { icon: LogOut, label: "Sign out", danger: true },
   ];
   return (
-    <section className="rounded-2xl bg-surface border border-border/60 shadow-card overflow-hidden">
-      {items.map((it, i) => (
-        <button key={it.label} className={`w-full flex items-center gap-3 px-4 py-3.5 text-left ${i < items.length - 1 ? "border-b border-border/50" : ""}`}>
-          <span className={`h-9 w-9 grid place-items-center rounded-xl ${it.danger ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"}`}>
-            <it.icon className="h-[18px] w-[18px]" strokeWidth={2.2} />
-          </span>
-          <span className={`flex-1 text-[14px] font-medium ${it.danger ? "text-destructive" : "text-foreground"}`}>{it.label}</span>
-          <ChevronRight className="h-4 w-4 text-muted-foreground" />
-        </button>
-      ))}
+    <div className="space-y-4">
+      <section className="rounded-3xl bg-surface border border-border/60 shadow-card overflow-hidden">
+        {items.map((it, i) => {
+          const inner = (
+            <>
+              <span className="h-9 w-9 grid place-items-center rounded-xl bg-muted text-muted-foreground">
+                <it.icon className="h-[18px] w-[18px]" strokeWidth={2.2} />
+              </span>
+              <span className="flex-1 text-[14px] font-medium text-foreground">{it.label}</span>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </>
+          );
+          const cls = `w-full flex items-center gap-3 px-4 py-3.5 text-left ${i < items.length - 1 ? "border-b border-border/50" : ""}`;
+          return it.to ? (
+            <Link key={it.label} to={it.to as any} className={cls}>{inner}</Link>
+          ) : (
+            <button key={it.label} className={cls}>{inner}</button>
+          );
+        })}
+      </section>
+
+      <button className="w-full flex items-center gap-3 rounded-3xl bg-surface border border-border/60 shadow-card px-4 py-3.5">
+        <span className="h-9 w-9 grid place-items-center rounded-xl bg-destructive/10 text-destructive">
+          <LogOut className="h-[18px] w-[18px]" strokeWidth={2.2} />
+        </span>
+        <span className="flex-1 text-left text-[14px] font-medium text-destructive">Sign out</span>
+        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+      </button>
+
+      <DeleteAccountCard />
+    </div>
+  );
+}
+
+function DeleteAccountCard() {
+  const [open, setOpen] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
+  const [confirm, setConfirm] = useState("");
+
+  const onOpenChange = (v: boolean) => {
+    setOpen(v);
+    if (!v) { setStep(1); setConfirm(""); }
+  };
+
+  return (
+    <section
+      className="relative overflow-hidden rounded-3xl border border-destructive/20 shadow-card p-5"
+      style={{ background: "linear-gradient(180deg, color-mix(in oklab, var(--color-destructive) 6%, var(--color-surface)) 0%, var(--color-surface) 100%)" }}
+    >
+      <div className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-destructive/10 blur-3xl pointer-events-none" />
+      <div className="relative">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 text-destructive px-2.5 py-1 text-[10.5px] uppercase tracking-wider font-bold">
+          <AlertCircle className="h-3 w-3" /> Danger zone
+        </div>
+        <h3 className="mt-3 text-[16px] font-bold text-foreground font-display">Delete account</h3>
+        <p className="mt-1.5 text-[12.5px] text-muted-foreground leading-relaxed">
+          Deleting your account will permanently remove your saved doctors, clinics, hospitals, preferences and medical information. This action can't be undone.
+        </p>
+
+        <AlertDialog open={open} onOpenChange={onOpenChange}>
+          <AlertDialogTrigger asChild>
+            <button className="mt-4 w-full h-11 rounded-xl bg-surface border border-destructive/30 text-destructive text-[13px] font-semibold inline-flex items-center justify-center gap-2 transition hover:bg-destructive/5">
+              <Trash2 className="h-4 w-4" /> Delete my account
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="rounded-3xl max-w-md p-0 overflow-hidden border-border/60">
+            <div className="p-6">
+              <div className="h-12 w-12 rounded-2xl bg-destructive/10 text-destructive grid place-items-center">
+                <AlertCircle className="h-6 w-6" />
+              </div>
+              <AlertDialogHeader className="mt-4 space-y-2 text-left">
+                <AlertDialogTitle className="text-[20px] font-display">
+                  {step === 1 ? "Are you sure?" : "One last check"}
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-[13px] leading-relaxed">
+                  {step === 1
+                    ? "Your profile, saved providers, follows, medical info and activity will be permanently deleted. We won't be able to recover them."
+                    : "Type DELETE below to confirm. This action is final and cannot be undone."}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              {step === 2 && (
+                <div className="mt-4">
+                  <input
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    placeholder="Type DELETE to confirm"
+                    className="w-full h-11 rounded-xl bg-surface border border-border/70 px-3 text-[13px] outline-none focus:border-destructive"
+                  />
+                </div>
+              )}
+
+              <AlertDialogFooter className="mt-6 flex-row gap-2">
+                <AlertDialogCancel className="flex-1 h-11 rounded-xl mt-0">Cancel</AlertDialogCancel>
+                {step === 1 ? (
+                  <button
+                    onClick={() => setStep(2)}
+                    className="flex-1 h-11 rounded-xl bg-destructive text-destructive-foreground text-[13px] font-semibold"
+                  >
+                    Continue
+                  </button>
+                ) : (
+                  <AlertDialogAction
+                    disabled={confirm !== "DELETE"}
+                    className="flex-1 h-11 rounded-xl bg-destructive text-destructive-foreground disabled:opacity-50"
+                  >
+                    Delete my account
+                  </AlertDialogAction>
+                )}
+              </AlertDialogFooter>
+            </div>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </section>
   );
 }
