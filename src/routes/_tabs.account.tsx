@@ -234,9 +234,10 @@ function SavedSection() {
 
 function FollowingSection() {
   const following = [
-    { id: doctors[1].id, name: doctors[1].name, sub: doctors[1].specialty, img: doctors[1].image, followers: doctors[1].followers, to: `/doctor/${doctors[1].id}` as const, recent: "Posted a new article" },
-    { id: doctors[2].id, name: doctors[2].name, sub: doctors[2].specialty, img: doctors[2].image, followers: doctors[2].followers, to: `/doctor/${doctors[2].id}` as const, recent: "Added new slots" },
-    { id: hospitals[0].id, name: hospitals[0].name, sub: hospitals[0].category, img: hospitals[0].cover, followers: hospitals[0].stats.followers, to: `/hospital/${hospitals[0].id}` as const, recent: "Opened new branch" },
+    { id: doctors[1].id, kind: "Doctor" as const, icon: Stethoscope, name: doctors[1].name, sub: doctors[1].specialty, img: doctors[1].image, followers: doctors[1].followers, to: `/doctor/${doctors[1].id}` as const, activity: "Available today", activityTint: "bg-success/15 text-success", dot: "bg-success" },
+    { id: doctors[2].id, kind: "Doctor" as const, icon: Stethoscope, name: doctors[2].name, sub: doctors[2].specialty, img: doctors[2].image, followers: doctors[2].followers, to: `/doctor/${doctors[2].id}` as const, activity: "Added 4 new slots", activityTint: "bg-primary-soft text-primary", dot: "bg-primary" },
+    { id: hospitals[0].id, kind: "Hospital" as const, icon: Building2, name: hospitals[0].name, sub: hospitals[0].category, img: hospitals[0].cover, followers: hospitals[0].stats.followers, to: `/hospital/${hospitals[0].id}` as const, activity: "New cardiology service", activityTint: "bg-[#fde7e9] text-[#a83247]", dot: "bg-[#a83247]" },
+    { id: clinics[0].id, kind: "Clinic" as const, icon: Building2, name: clinics[0].name, sub: clinics[0].specialties[0], img: clinics[0].image, followers: 1240, to: `/clinic/${clinics[0].id}` as const, activity: "Updated 2h ago", activityTint: "bg-[#ffeede] text-[#a85a1f]", dot: "bg-[#a85a1f]" },
   ];
 
   return (
@@ -244,18 +245,45 @@ function FollowingSection() {
       <SectionHeading title="Following" action={{ label: "Manage", to: "/account" }} />
       <div className="mt-3 space-y-2.5">
         {following.map((f) => (
-          <div key={f.id} className="rounded-2xl bg-surface border border-border/60 p-3 flex items-center gap-3 shadow-card">
-            <div className="relative h-12 w-12 rounded-full overflow-hidden shrink-0 ring-2 ring-primary-soft">
-              <img src={f.img} alt={f.name} className="h-full w-full object-cover" />
+          <div key={f.kind + f.id} className="group rounded-2xl bg-surface border border-border/60 p-3.5 shadow-card transition-all hover:-translate-y-0.5">
+            <div className="flex items-center gap-3">
+              <div className="relative h-12 w-12 shrink-0">
+                <div className="h-full w-full rounded-2xl overflow-hidden ring-2 ring-primary-soft">
+                  <img src={f.img} alt={f.name} className="h-full w-full object-cover" />
+                </div>
+                <span className="absolute -bottom-1 -right-1 h-5 w-5 grid place-items-center rounded-full bg-surface border border-border/60 text-primary">
+                  <f.icon className="h-2.5 w-2.5" strokeWidth={2.4} />
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <p className="font-semibold text-foreground text-[14px] truncate">{f.name}</p>
+                  <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
+                </div>
+                <p className="text-[11.5px] text-muted-foreground truncate">{f.sub} · {f.followers.toLocaleString()} followers</p>
+              </div>
+              <button className="h-8 px-3 rounded-full bg-primary-soft text-primary text-[11.5px] font-semibold inline-flex items-center gap-1">
+                <CheckCircle2 className="h-3 w-3" /> Following
+              </button>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-foreground text-[14px] truncate">{f.name}</p>
-              <p className="text-[12px] text-muted-foreground truncate">{f.sub} · {f.followers} followers</p>
-              <p className="text-[11px] text-primary font-medium mt-0.5 truncate">{f.recent}</p>
+
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10.5px] font-semibold ${f.activityTint}`}>
+                <span className={`h-1.5 w-1.5 rounded-full ${f.dot}`} />
+                {f.activity}
+              </span>
+              <div className="flex gap-1.5">
+                <button className="h-8 w-8 rounded-full bg-muted/60 text-foreground grid place-items-center">
+                  <Phone className="h-3.5 w-3.5" />
+                </button>
+                <button className="h-8 w-8 rounded-full bg-[#e8f7ee] text-[#1f7a3d] grid place-items-center">
+                  <MessageCircle className="h-3.5 w-3.5" />
+                </button>
+                <Link to={f.to as any} className="h-8 px-3 rounded-full bg-foreground text-background text-[11.5px] font-semibold inline-flex items-center gap-1">
+                  View <ArrowUpRight className="h-3 w-3" />
+                </Link>
+              </div>
             </div>
-            <Link to={f.to as any} className="h-9 px-3 rounded-full bg-primary-soft text-primary text-[12px] font-semibold inline-flex items-center gap-1">
-              View <ArrowUpRight className="h-3.5 w-3.5" />
-            </Link>
           </div>
         ))}
       </div>
