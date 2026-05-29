@@ -211,17 +211,6 @@ function FindDoctors() {
         })}
       </div>
 
-      <div className="mt-5 px-5 flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
-          <p className="text-[12px] font-semibold text-foreground">
-            {filtered.length} doctors · {activeCount} filters
-          </p>
-        </div>
-        <button className="inline-flex items-center gap-1 text-[12px] font-semibold text-foreground bg-surface border border-border/60 rounded-full px-3 py-1.5 shadow-card">
-          Highest Rated <ChevronDown className="h-3 w-3" />
-        </button>
-      </div>
 
       <div className="mt-3 px-5 space-y-3">
         {filtered.map((d) => (
