@@ -1,16 +1,12 @@
 
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   ArrowUpRight,
   ChevronRight,
-  Droplet,
-  HeartPulse,
   Home,
   MapPin,
   MessageCircle,
-  Mic,
-  Search,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -24,8 +20,6 @@ export const Route = createFileRoute("/_tabs/lab-tests")({
 });
 
 function LabTestsPage() {
-  const navigate = useNavigate();
-
   return (
     <div className="pb-8">
       {/* HERO */}
@@ -34,8 +28,8 @@ function LabTestsPage() {
           <div className="absolute -top-20 -right-16 h-56 w-56 rounded-full bg-primary/25 blur-3xl pointer-events-none" />
           <div className="absolute -bottom-16 -left-10 h-48 w-48 rounded-full bg-primary-glow/30 blur-3xl pointer-events-none" />
 
-          {/* Image panel */}
-          <div className="relative h-56 w-full overflow-hidden">
+          {/* Image + blended copy */}
+          <div className="relative h-[420px] w-full overflow-hidden">
             <img
               src={heroImg}
               alt="Premium home sample collection by certified phlebotomist"
@@ -43,9 +37,12 @@ function LabTestsPage() {
               height={1024}
               className="h-full w-full object-cover object-top"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-surface/95" />
+            {/* Soft top wash so chips stay legible */}
+            <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-surface/40 to-transparent" />
+            {/* Strong bottom fade so the headline blends into the card */}
+            <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-surface via-surface/92 to-transparent" />
 
-            {/* Floating glass micro card */}
+            {/* Floating glass micro cards */}
             <div className="absolute top-4 left-4 flex items-center gap-2 rounded-2xl bg-surface/85 backdrop-blur-md px-3 py-2 border border-border/40 shadow-card">
               <span className="h-7 w-7 rounded-xl bg-primary-soft grid place-items-center">
                 <Home className="h-3.5 w-3.5 text-primary" />
@@ -56,71 +53,40 @@ function LabTestsPage() {
               </div>
             </div>
 
-            <div className="absolute bottom-6 right-4 flex items-center gap-2 rounded-2xl bg-surface/85 backdrop-blur-md px-3 py-2 border border-border/40 shadow-card">
+            <div className="absolute top-4 right-4 flex items-center gap-2 rounded-2xl bg-surface/85 backdrop-blur-md px-3 py-2 border border-border/40 shadow-card">
               <span className="h-7 w-7 rounded-xl bg-[oklch(0.94_0.06_150)] grid place-items-center">
                 <MessageCircle className="h-3.5 w-3.5 text-[oklch(0.48_0.16_150)]" />
               </span>
               <div className="leading-tight">
-                <p className="text-[10.5px] font-bold text-foreground">Reports on WhatsApp</p>
+                <p className="text-[10.5px] font-bold text-foreground">WhatsApp Reports</p>
                 <p className="text-[9.5px] text-muted-foreground">Within 24 hours</p>
               </div>
             </div>
-          </div>
 
-          {/* Copy + CTAs */}
-          <div className="relative px-5 pb-5 -mt-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-surface/90 backdrop-blur px-2.5 py-1 text-[10.5px] font-bold text-primary border border-primary/15 shadow-card">
-              <ShieldCheck className="h-3 w-3" /> NABL Certified · Trusted
-            </span>
-            <h1 className="mt-3 text-[26px] leading-[1.1] font-display font-extrabold text-foreground tracking-tight">
-              Book trusted lab
-              <br />
-              tests <span className="text-primary">from home.</span>
-            </h1>
-            <p className="mt-2 text-[12.5px] text-muted-foreground leading-snug max-w-[300px]">
-              Transparent prices, certified labs and home sample collection — diagnostics made simple.
-            </p>
-
-            <div className="mt-4 flex flex-col gap-2.5">
-              <button
-                onClick={() => navigate({ to: "/blood-tests" })}
-                className="group relative h-12 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-brand text-primary-foreground text-[13.5px] font-semibold shadow-glow active:scale-[0.985] transition"
-              >
-                <Droplet className="h-4 w-4" /> Explore Blood Tests
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </button>
-              <button
-                onClick={() => navigate({ to: "/health-packages" })}
-                className="h-12 inline-flex items-center justify-center gap-2 rounded-full bg-surface border border-border text-foreground text-[13.5px] font-semibold active:scale-[0.985] transition"
-              >
-                <HeartPulse className="h-4 w-4 text-primary" /> Explore Health Packages
-              </button>
+            {/* Hero text blended into the image bottom */}
+            <div className="absolute inset-x-0 bottom-0 px-5 pb-6">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-surface/90 backdrop-blur px-2.5 py-1 text-[10.5px] font-bold text-primary border border-primary/15 shadow-card">
+                <ShieldCheck className="h-3 w-3" /> NABL Certified · Trusted
+              </span>
+              <h1 className="mt-2.5 text-[28px] leading-[1.05] font-display font-extrabold text-foreground tracking-tight">
+                Book trusted lab
+                <br />
+                tests <span className="text-primary">from home.</span>
+              </h1>
+              <p className="mt-2 text-[12.5px] text-muted-foreground leading-snug max-w-[300px]">
+                Transparent prices, certified labs and home sample collection.
+              </p>
+              <div className="mt-3 inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-muted-foreground">
+                <MapPin className="h-3.5 w-3.5 text-primary" />
+                Showing for <span className="text-foreground">Bengaluru</span>
+                <ChevronRight className="h-3.5 w-3.5" />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* SEARCH */}
-      <section className="px-5 mt-5">
-        <div className="flex items-center gap-2 rounded-2xl bg-surface border border-border/60 shadow-card px-3 h-12">
-          <Search className="h-4 w-4 text-muted-foreground" />
-          <input
-            placeholder="Search tests, packages, conditions…"
-            className="flex-1 bg-transparent text-[13px] outline-none placeholder:text-muted-foreground"
-          />
-          <button
-            aria-label="Voice search"
-            className="h-8 w-8 grid place-items-center rounded-full bg-primary-soft text-primary"
-          >
-            <Mic className="h-3.5 w-3.5" />
-          </button>
-        </div>
-        <button className="mt-2 inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-muted-foreground">
-          <MapPin className="h-3.5 w-3.5 text-primary" />
-          Showing tests for <span className="text-foreground">Bengaluru</span>
-          <ChevronRight className="h-3.5 w-3.5" />
-        </button>
-      </section>
+
 
       {/* CATEGORY CARDS */}
       <section className="mt-6 px-5">
