@@ -5,8 +5,14 @@ import {
   Search, Phone, MessageCircle, ShieldCheck, MapPin, ChevronRight,
   Activity, Users, CalendarCheck, Sparkles, BookOpen, ArrowUpRight,
   Mail, Calendar, Droplet, Home, AlertCircle, Pencil, Download,
-  Share2, Bell, Lock, LogOut, Info, ChevronDown, Plus,
+  Share2, Bell, Lock, LogOut, Info, ChevronDown, Plus, Trash2,
+  ScrollText, CheckCircle2, Building2, Clock3, X,
 } from "lucide-react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -88,58 +94,51 @@ function Dashboard() {
 
 function HeroCard() {
   return (
-    <section className="relative overflow-hidden rounded-[28px] bg-gradient-hero border border-border/60 shadow-card p-6">
-      <div className="absolute -top-16 -right-12 h-44 w-44 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-16 -left-10 h-40 w-40 rounded-full bg-primary-glow/20 blur-3xl pointer-events-none" />
+    <section className="relative overflow-hidden rounded-[32px] border border-border/60 shadow-card p-6 bg-gradient-hero">
+      {/* layered glow */}
+      <div className="absolute -top-24 -right-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 -left-16 h-56 w-56 rounded-full bg-primary-glow/25 blur-3xl pointer-events-none" />
+      <div className="absolute inset-0 opacity-[0.06] pointer-events-none"
+           style={{ backgroundImage: "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)", backgroundSize: "18px 18px" }} />
+
+      {/* floating micro card top-right */}
+      <div className="absolute top-5 right-5 flex items-center gap-2 rounded-2xl bg-surface/85 backdrop-blur border border-border/60 px-3 py-1.5 shadow-card">
+        <span className="relative flex h-2 w-2">
+          <span className="absolute inset-0 rounded-full bg-success animate-ping opacity-60" />
+          <span className="relative rounded-full bg-success h-2 w-2" />
+        </span>
+        <span className="text-[11px] font-semibold text-foreground">All set</span>
+      </div>
 
       <div className="relative">
-        <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-primary font-semibold">
-          <Sparkles className="h-3.5 w-3.5" />
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-surface/80 border border-border/60 px-2.5 py-1 text-[10.5px] uppercase tracking-wider text-primary font-bold shadow-card">
+          <Sparkles className="h-3 w-3" />
           Your Health Hub
         </div>
-        <h1 className="mt-2 text-[26px] leading-tight font-bold text-foreground font-display">
-          Welcome back, <span className="text-primary">{user.firstName}</span>
+        <h1 className="mt-4 text-[30px] leading-[1.05] font-bold text-foreground font-display tracking-tight">
+          Welcome back,<br />
+          <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">{user.firstName}.</span>
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground leading-relaxed text-balance">
-          Find the best doctors near you and connect instantly with verified healthcare providers.
+        <p className="mt-3 text-[13.5px] text-muted-foreground leading-relaxed text-balance max-w-[320px]">
+          A calmer way to find trusted doctors and stay on top of your care.
         </p>
 
-        <div className="mt-5 flex flex-wrap gap-2">
+        <div className="mt-6 flex flex-wrap gap-2">
           <Link
             to="/find-doctors"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-brand text-primary-foreground px-5 py-2.5 text-sm font-semibold shadow-glow"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-brand text-primary-foreground px-5 py-2.5 text-[13px] font-semibold shadow-glow"
           >
             <Search className="h-4 w-4" /> Find Doctors
           </Link>
           <Link
             to="/explore"
-            className="inline-flex items-center gap-2 rounded-full bg-surface border border-border/70 text-foreground px-5 py-2.5 text-sm font-semibold shadow-card"
+            className="inline-flex items-center gap-2 rounded-full bg-surface/90 backdrop-blur border border-border/70 text-foreground px-5 py-2.5 text-[13px] font-semibold shadow-card"
           >
             <Compass className="h-4 w-4" /> Explore
           </Link>
         </div>
-
-        {/* Floating mini-stat */}
-        <div className="mt-6 grid grid-cols-2 gap-3">
-          <FloatPill icon={ShieldCheck} label="Verified" value="100% Trusted" />
-          <FloatPill icon={Activity} label="Today" value="3 New Doctors" />
-        </div>
       </div>
     </section>
-  );
-}
-
-function FloatPill({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
-  return (
-    <div className="rounded-2xl bg-surface/80 backdrop-blur border border-border/60 p-3 flex items-center gap-3">
-      <span className="h-9 w-9 grid place-items-center rounded-xl bg-primary-soft text-primary">
-        <Icon className="h-[18px] w-[18px]" strokeWidth={2.2} />
-      </span>
-      <div className="leading-tight">
-        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">{label}</p>
-        <p className="text-[13px] font-semibold text-foreground">{value}</p>
-      </div>
-    </div>
   );
 }
 
@@ -235,9 +234,10 @@ function SavedSection() {
 
 function FollowingSection() {
   const following = [
-    { id: doctors[1].id, name: doctors[1].name, sub: doctors[1].specialty, img: doctors[1].image, followers: doctors[1].followers, to: `/doctor/${doctors[1].id}` as const, recent: "Posted a new article" },
-    { id: doctors[2].id, name: doctors[2].name, sub: doctors[2].specialty, img: doctors[2].image, followers: doctors[2].followers, to: `/doctor/${doctors[2].id}` as const, recent: "Added new slots" },
-    { id: hospitals[0].id, name: hospitals[0].name, sub: hospitals[0].category, img: hospitals[0].cover, followers: hospitals[0].stats.followers, to: `/hospital/${hospitals[0].id}` as const, recent: "Opened new branch" },
+    { id: doctors[1].id, kind: "Doctor" as const, icon: Stethoscope, name: doctors[1].name, sub: doctors[1].specialty, img: doctors[1].image, followers: doctors[1].followers, to: `/doctor/${doctors[1].id}` as const, activity: "Available today", activityTint: "bg-success/15 text-success", dot: "bg-success" },
+    { id: doctors[2].id, kind: "Doctor" as const, icon: Stethoscope, name: doctors[2].name, sub: doctors[2].specialty, img: doctors[2].image, followers: doctors[2].followers, to: `/doctor/${doctors[2].id}` as const, activity: "Added 4 new slots", activityTint: "bg-primary-soft text-primary", dot: "bg-primary" },
+    { id: hospitals[0].id, kind: "Hospital" as const, icon: Building2, name: hospitals[0].name, sub: hospitals[0].category, img: hospitals[0].cover, followers: hospitals[0].stats.followers, to: `/hospital/${hospitals[0].id}` as const, activity: "New cardiology service", activityTint: "bg-[#fde7e9] text-[#a83247]", dot: "bg-[#a83247]" },
+    { id: clinics[0].id, kind: "Clinic" as const, icon: Building2, name: clinics[0].name, sub: clinics[0].specialties[0], img: clinics[0].image, followers: 1240, to: `/clinic/${clinics[0].id}` as const, activity: "Updated 2h ago", activityTint: "bg-[#ffeede] text-[#a85a1f]", dot: "bg-[#a85a1f]" },
   ];
 
   return (
@@ -245,18 +245,45 @@ function FollowingSection() {
       <SectionHeading title="Following" action={{ label: "Manage", to: "/account" }} />
       <div className="mt-3 space-y-2.5">
         {following.map((f) => (
-          <div key={f.id} className="rounded-2xl bg-surface border border-border/60 p-3 flex items-center gap-3 shadow-card">
-            <div className="relative h-12 w-12 rounded-full overflow-hidden shrink-0 ring-2 ring-primary-soft">
-              <img src={f.img} alt={f.name} className="h-full w-full object-cover" />
+          <div key={f.kind + f.id} className="group rounded-2xl bg-surface border border-border/60 p-3.5 shadow-card transition-all hover:-translate-y-0.5">
+            <div className="flex items-center gap-3">
+              <div className="relative h-12 w-12 shrink-0">
+                <div className="h-full w-full rounded-2xl overflow-hidden ring-2 ring-primary-soft">
+                  <img src={f.img} alt={f.name} className="h-full w-full object-cover" />
+                </div>
+                <span className="absolute -bottom-1 -right-1 h-5 w-5 grid place-items-center rounded-full bg-surface border border-border/60 text-primary">
+                  <f.icon className="h-2.5 w-2.5" strokeWidth={2.4} />
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <p className="font-semibold text-foreground text-[14px] truncate">{f.name}</p>
+                  <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
+                </div>
+                <p className="text-[11.5px] text-muted-foreground truncate">{f.sub} · {f.followers.toLocaleString()} followers</p>
+              </div>
+              <button className="h-8 px-3 rounded-full bg-primary-soft text-primary text-[11.5px] font-semibold inline-flex items-center gap-1">
+                <CheckCircle2 className="h-3 w-3" /> Following
+              </button>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-foreground text-[14px] truncate">{f.name}</p>
-              <p className="text-[12px] text-muted-foreground truncate">{f.sub} · {f.followers} followers</p>
-              <p className="text-[11px] text-primary font-medium mt-0.5 truncate">{f.recent}</p>
+
+            <div className="mt-3 flex items-center justify-between gap-2">
+              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10.5px] font-semibold ${f.activityTint}`}>
+                <span className={`h-1.5 w-1.5 rounded-full ${f.dot}`} />
+                {f.activity}
+              </span>
+              <div className="flex gap-1.5">
+                <button className="h-8 w-8 rounded-full bg-muted/60 text-foreground grid place-items-center">
+                  <Phone className="h-3.5 w-3.5" />
+                </button>
+                <button className="h-8 w-8 rounded-full bg-[#e8f7ee] text-[#1f7a3d] grid place-items-center">
+                  <MessageCircle className="h-3.5 w-3.5" />
+                </button>
+                <Link to={f.to as any} className="h-8 px-3 rounded-full bg-foreground text-background text-[11.5px] font-semibold inline-flex items-center gap-1">
+                  View <ArrowUpRight className="h-3 w-3" />
+                </Link>
+              </div>
             </div>
-            <Link to={f.to as any} className="h-9 px-3 rounded-full bg-primary-soft text-primary text-[12px] font-semibold inline-flex items-center gap-1">
-              View <ArrowUpRight className="h-3.5 w-3.5" />
-            </Link>
           </div>
         ))}
       </div>
@@ -348,23 +375,127 @@ function ArticlesAndMagazines() {
 }
 
 function SettingsCard() {
-  const items = [
+  const items: { icon: any; label: string; to?: string; href?: string }[] = [
     { icon: Bell, label: "Notifications" },
     { icon: Lock, label: "Privacy & Security" },
+    { icon: ScrollText, label: "Legal Center", to: "/legal" },
     { icon: Info, label: "Help & Support" },
-    { icon: LogOut, label: "Sign out", danger: true },
   ];
   return (
-    <section className="rounded-2xl bg-surface border border-border/60 shadow-card overflow-hidden">
-      {items.map((it, i) => (
-        <button key={it.label} className={`w-full flex items-center gap-3 px-4 py-3.5 text-left ${i < items.length - 1 ? "border-b border-border/50" : ""}`}>
-          <span className={`h-9 w-9 grid place-items-center rounded-xl ${it.danger ? "bg-destructive/10 text-destructive" : "bg-muted text-muted-foreground"}`}>
-            <it.icon className="h-[18px] w-[18px]" strokeWidth={2.2} />
-          </span>
-          <span className={`flex-1 text-[14px] font-medium ${it.danger ? "text-destructive" : "text-foreground"}`}>{it.label}</span>
-          <ChevronRight className="h-4 w-4 text-muted-foreground" />
-        </button>
-      ))}
+    <div className="space-y-4">
+      <section className="rounded-3xl bg-surface border border-border/60 shadow-card overflow-hidden">
+        {items.map((it, i) => {
+          const inner = (
+            <>
+              <span className="h-9 w-9 grid place-items-center rounded-xl bg-muted text-muted-foreground">
+                <it.icon className="h-[18px] w-[18px]" strokeWidth={2.2} />
+              </span>
+              <span className="flex-1 text-[14px] font-medium text-foreground">{it.label}</span>
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </>
+          );
+          const cls = `w-full flex items-center gap-3 px-4 py-3.5 text-left ${i < items.length - 1 ? "border-b border-border/50" : ""}`;
+          return it.to ? (
+            <Link key={it.label} to={it.to as any} className={cls}>{inner}</Link>
+          ) : (
+            <button key={it.label} className={cls}>{inner}</button>
+          );
+        })}
+      </section>
+
+      <button className="w-full flex items-center gap-3 rounded-3xl bg-surface border border-border/60 shadow-card px-4 py-3.5">
+        <span className="h-9 w-9 grid place-items-center rounded-xl bg-destructive/10 text-destructive">
+          <LogOut className="h-[18px] w-[18px]" strokeWidth={2.2} />
+        </span>
+        <span className="flex-1 text-left text-[14px] font-medium text-destructive">Sign out</span>
+        <ChevronRight className="h-4 w-4 text-muted-foreground" />
+      </button>
+
+      <DeleteAccountCard />
+    </div>
+  );
+}
+
+function DeleteAccountCard() {
+  const [open, setOpen] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
+  const [confirm, setConfirm] = useState("");
+
+  const onOpenChange = (v: boolean) => {
+    setOpen(v);
+    if (!v) { setStep(1); setConfirm(""); }
+  };
+
+  return (
+    <section
+      className="relative overflow-hidden rounded-3xl border border-destructive/20 shadow-card p-5"
+      style={{ background: "linear-gradient(180deg, color-mix(in oklab, var(--color-destructive) 6%, var(--color-surface)) 0%, var(--color-surface) 100%)" }}
+    >
+      <div className="absolute -top-12 -right-12 h-32 w-32 rounded-full bg-destructive/10 blur-3xl pointer-events-none" />
+      <div className="relative">
+        <div className="inline-flex items-center gap-1.5 rounded-full bg-destructive/10 text-destructive px-2.5 py-1 text-[10.5px] uppercase tracking-wider font-bold">
+          <AlertCircle className="h-3 w-3" /> Danger zone
+        </div>
+        <h3 className="mt-3 text-[16px] font-bold text-foreground font-display">Delete account</h3>
+        <p className="mt-1.5 text-[12.5px] text-muted-foreground leading-relaxed">
+          Deleting your account will permanently remove your saved doctors, clinics, hospitals, preferences and medical information. This action can't be undone.
+        </p>
+
+        <AlertDialog open={open} onOpenChange={onOpenChange}>
+          <AlertDialogTrigger asChild>
+            <button className="mt-4 w-full h-11 rounded-xl bg-surface border border-destructive/30 text-destructive text-[13px] font-semibold inline-flex items-center justify-center gap-2 transition hover:bg-destructive/5">
+              <Trash2 className="h-4 w-4" /> Delete my account
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent className="rounded-3xl max-w-md p-0 overflow-hidden border-border/60">
+            <div className="p-6">
+              <div className="h-12 w-12 rounded-2xl bg-destructive/10 text-destructive grid place-items-center">
+                <AlertCircle className="h-6 w-6" />
+              </div>
+              <AlertDialogHeader className="mt-4 space-y-2 text-left">
+                <AlertDialogTitle className="text-[20px] font-display">
+                  {step === 1 ? "Are you sure?" : "One last check"}
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-[13px] leading-relaxed">
+                  {step === 1
+                    ? "Your profile, saved providers, follows, medical info and activity will be permanently deleted. We won't be able to recover them."
+                    : "Type DELETE below to confirm. This action is final and cannot be undone."}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              {step === 2 && (
+                <div className="mt-4">
+                  <input
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    placeholder="Type DELETE to confirm"
+                    className="w-full h-11 rounded-xl bg-surface border border-border/70 px-3 text-[13px] outline-none focus:border-destructive"
+                  />
+                </div>
+              )}
+
+              <AlertDialogFooter className="mt-6 flex-row gap-2">
+                <AlertDialogCancel className="flex-1 h-11 rounded-xl mt-0">Cancel</AlertDialogCancel>
+                {step === 1 ? (
+                  <button
+                    onClick={() => setStep(2)}
+                    className="flex-1 h-11 rounded-xl bg-destructive text-destructive-foreground text-[13px] font-semibold"
+                  >
+                    Continue
+                  </button>
+                ) : (
+                  <AlertDialogAction
+                    disabled={confirm !== "DELETE"}
+                    className="flex-1 h-11 rounded-xl bg-destructive text-destructive-foreground disabled:opacity-50"
+                  >
+                    Delete my account
+                  </AlertDialogAction>
+                )}
+              </AlertDialogFooter>
+            </div>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </section>
   );
 }
