@@ -97,7 +97,7 @@ function LegalPage() {
   const sections = tab === "privacy" ? privacy : terms;
   const ids = useMemo(() => sections.map((s) => s.id), [sections]);
   const [active, setActive] = useState(ids[0]);
-  const refs = useRef<Record<string, HTMLDivElement | null>>({});
+  const refs = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => { setActive(ids[0]); }, [tab, ids]);
 
