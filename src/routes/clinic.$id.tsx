@@ -25,7 +25,7 @@ import {
   Syringe,
   Users,
 } from "lucide-react";
-import { clinics, getClinic } from "@/lib/clinics";
+import { clinics, getClinic, type Clinic } from "@/lib/clinics";
 import { ReachOutDialog } from "@/components/ReachOutDialog";
 
 export const Route = createFileRoute("/clinic/$id")({
