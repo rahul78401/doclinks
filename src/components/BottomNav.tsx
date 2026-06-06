@@ -15,7 +15,7 @@ const tabs: Tab[] = [
 export function BottomNav() {
   const { pathname } = useLocation();
   return (
-    <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] max-w-md">
+    <nav className="lg:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1.5rem)] max-w-md">
       <div className="glass-strong border border-border/60 rounded-[28px] shadow-nav px-2 py-2">
         <ul className="grid grid-cols-5 items-end">
           {tabs.map(({ to, label, icon: Icon, featured }) => {
