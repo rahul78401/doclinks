@@ -364,7 +364,7 @@ function HospitalDetail() {
       </Section>
 
       {/* Sticky bottom bar */}
-      <div className="fixed bottom-0 inset-x-0 z-30">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-30">
         <div className="max-w-md mx-auto px-4 pb-[max(env(safe-area-inset-bottom),14px)] pt-3">
           <div className="glass-strong rounded-2xl border border-border/60 shadow-float p-2 flex items-center gap-2">
             <button
