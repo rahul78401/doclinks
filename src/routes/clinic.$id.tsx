@@ -342,7 +342,7 @@ function ClinicDetail() {
       )}
 
       {/* STICKY MOBILE CTA */}
-      <div className="fixed bottom-20 inset-x-0 z-40 px-5">
+      <div className="lg:hidden fixed bottom-20 inset-x-0 z-40 px-5">
         <div className="rounded-2xl bg-surface/90 backdrop-blur-xl border border-border/60 shadow-float p-2 flex items-center gap-2">
           <a
             href="tel:+919999999999"
