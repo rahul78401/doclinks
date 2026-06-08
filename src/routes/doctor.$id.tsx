@@ -98,7 +98,7 @@ const SOCIAL_DEFS = [
   { key: "website", label: "Website", icon: Globe },
 ] as const;
 
-const GALLERY: { src: string; label: string; tall?: boolean }[] = [];
+
 
 function DoctorDetail() {
   const { doctor } = Route.useLoaderData();
