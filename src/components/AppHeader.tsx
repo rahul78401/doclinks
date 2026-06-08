@@ -2,8 +2,11 @@ import { ChevronDown, MapPin } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "./Logo";
 import { CartButton } from "./CartButton";
+import { useAuth } from "@/lib/auth";
 
 export function AppHeader() {
+  const { user, isAuthenticated, openAuth } = useAuth();
+
   return (
     <header className="lg:hidden sticky top-0 z-40 glass border-b border-border/60">
       <div className="flex items-center justify-between px-5 pt-4 pb-3">
@@ -12,13 +15,23 @@ export function AppHeader() {
         </div>
         <div className="flex items-center gap-2">
           <CartButton />
-          <Link
-            to="/account"
-            aria-label="Open your account"
-            className="h-10 w-10 rounded-full bg-gradient-brand grid place-items-center text-primary-foreground font-semibold text-sm shadow-card transition-transform active:scale-95"
-          >
-            AS
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to="/account"
+              aria-label="Open your account"
+              className="h-10 w-10 rounded-full bg-gradient-brand grid place-items-center text-primary-foreground font-semibold text-sm shadow-card transition-transform active:scale-95"
+            >
+              {user?.initials ?? "DL"}
+            </Link>
+          ) : (
+            <button
+              onClick={() => openAuth("login")}
+              aria-label="Sign in to your account"
+              className="h-10 px-3.5 rounded-full bg-gradient-brand grid place-items-center text-primary-foreground font-semibold text-[12px] shadow-card transition-transform active:scale-95"
+            >
+              Sign in
+            </button>
+          )}
         </div>
       </div>
       <button className="mx-5 mb-3 flex items-center gap-2 text-left">

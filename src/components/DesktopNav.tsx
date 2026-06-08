@@ -2,6 +2,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { Search, MapPin, ChevronDown } from "lucide-react";
 import { Logo } from "./Logo";
 import { CartButton } from "./CartButton";
+import { useAuth } from "@/lib/auth";
 
 const links = [
   { to: "/", label: "Home" },
@@ -14,6 +15,7 @@ const links = [
 
 export function DesktopNav() {
   const { pathname } = useLocation();
+  const { user, isAuthenticated, openAuth } = useAuth();
   return (
     <header className="hidden lg:block sticky top-0 z-50 glass-strong border-b border-border/60">
       <div className="max-w-7xl mx-auto px-8 h-16 flex items-center gap-8">
@@ -62,13 +64,22 @@ export function DesktopNav() {
 
           <CartButton variant="desktop" />
 
-          <Link
-            to="/account"
-            aria-label="Open your account"
-            className="h-10 w-10 rounded-full bg-gradient-brand grid place-items-center text-primary-foreground font-semibold text-sm shadow-card transition-transform hover:scale-[1.03]"
-          >
-            AS
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to="/account"
+              aria-label="Open your account"
+              className="h-10 w-10 rounded-full bg-gradient-brand grid place-items-center text-primary-foreground font-semibold text-sm shadow-card transition-transform hover:scale-[1.03]"
+            >
+              {user?.initials ?? "DL"}
+            </Link>
+          ) : (
+            <button
+              onClick={() => openAuth("login")}
+              className="h-10 px-4 rounded-full bg-gradient-brand text-primary-foreground font-semibold text-[13px] shadow-card hover:opacity-95 transition"
+            >
+              Sign in
+            </button>
+          )}
         </div>
       </div>
     </header>
