@@ -1,10 +1,12 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   ArrowLeft,
   Award,
   BadgeCheck,
   Bookmark,
   Calendar,
+  Camera,
   Car,
   ChevronRight,
   Clock,
@@ -18,7 +20,7 @@ import {
   MessageCircle,
   Navigation,
   Phone,
-  PhoneCall,
+  Send,
   Share2,
   ShieldCheck,
   Sparkles,
@@ -30,7 +32,13 @@ import {
   Youtube,
 } from "lucide-react";
 import { doctors, formatFee, formatFeeLong, getDoctor, type DaySchedule } from "@/lib/doctors";
+import { InquiryDialog } from "@/components/InquiryDialog";
 import clinicImg from "@/assets/clinic-1.jpg";
+import hospital1 from "@/assets/hospital-1.jpg";
+import hospital2 from "@/assets/hospital-2.jpg";
+import hospital3 from "@/assets/hospital-3.jpg";
+import hospital4 from "@/assets/hospital-4.jpg";
+import labHero from "@/assets/lab-hero.jpg";
 
 export const Route = createFileRoute("/doctor/$id")({
   loader: ({ params }) => {
@@ -90,10 +98,23 @@ const SOCIAL_DEFS = [
   { key: "website", label: "Website", icon: Globe },
 ] as const;
 
+
+
 function DoctorDetail() {
   const { doctor } = Route.useLoaderData();
+  const [inquiryOpen, setInquiryOpen] = useState(false);
   const similar = doctors.filter((d) => d.id !== doctor.id);
   const hasFee = typeof doctor.fee === "number";
+
+  const gallery = [
+    { src: clinicImg, label: "Clinic", tall: true },
+    { src: hospital1, label: "Reception" },
+    { src: hospital2, label: "Consultation Room" },
+    { src: hospital3, label: "Doctor at Work", tall: true },
+    { src: labHero, label: "Equipment" },
+    { src: hospital4, label: "Waiting Area" },
+  ];
+
 
   return (
     <div className="min-h-screen bg-background pb-28">
@@ -270,24 +291,65 @@ function DoctorDetail() {
         </Card>
       </section>
 
-      {/* Treatments */}
-      <section className="mt-4">
-        <div className="px-5 mb-2 flex items-center justify-between">
-          <h2 className="text-[15px] font-display font-bold text-foreground">
-            Treatments & Specializations
-          </h2>
-        </div>
-        <div className="flex gap-2 overflow-x-auto no-scrollbar px-5">
-          {doctor.treatments.map((t: string) => (
-            <span
-              key={t}
-              className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-surface border border-border/60 px-3.5 py-2 text-[12px] font-semibold shadow-card"
-            >
-              <Sparkles className="h-3 w-3 text-primary" /> {t}
+      {/* Gallery */}
+      <section className="mt-5">
+        <div className="px-5 mb-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="h-7 w-7 grid place-items-center rounded-lg bg-primary-soft text-primary">
+              <Camera className="h-4 w-4" />
             </span>
+            <h2 className="text-[15px] font-display font-bold text-foreground">
+              Gallery
+            </h2>
+          </div>
+          <span className="text-[11px] font-semibold text-muted-foreground">
+            {gallery.length} photos
+          </span>
+        </div>
+
+        {/* Mobile: horizontal carousel */}
+        <div className="md:hidden flex gap-3 overflow-x-auto no-scrollbar px-5 pb-2 snap-x snap-mandatory">
+          {gallery.map((g, i) => (
+            <figure
+              key={i}
+              className="group relative shrink-0 w-[78%] snap-start rounded-3xl overflow-hidden bg-surface border border-border/60 shadow-card"
+            >
+              <img
+                src={g.src}
+                alt={g.label}
+                loading="lazy"
+                className="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <figcaption className="absolute inset-x-0 bottom-0 px-3 py-2 text-[11.5px] font-semibold text-white bg-gradient-to-t from-black/55 via-black/20 to-transparent">
+                {g.label}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+
+        {/* Tablet/Desktop: masonry-like grid */}
+        <div className="hidden md:grid grid-cols-3 auto-rows-[140px] gap-3 px-5">
+          {gallery.map((g, i) => (
+            <figure
+              key={i}
+              className={`group relative rounded-3xl overflow-hidden bg-surface border border-border/60 shadow-card ${
+                g.tall ? "row-span-2" : ""
+              }`}
+            >
+              <img
+                src={g.src}
+                alt={g.label}
+                loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <figcaption className="absolute inset-x-0 bottom-0 px-3 py-2 text-[11.5px] font-semibold text-white bg-gradient-to-t from-black/55 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                {g.label}
+              </figcaption>
+            </figure>
           ))}
         </div>
       </section>
+
 
       {/* Clinic */}
       <section className="px-5 mt-4">
@@ -387,8 +449,11 @@ function DoctorDetail() {
       {/* Sticky bottom CTA */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-border/60 px-4 py-3 pb-[max(env(safe-area-inset-bottom),1rem)]">
         <div className="flex gap-2 max-w-md mx-auto">
-          <button className="flex-1 h-12 rounded-2xl bg-gradient-brand text-primary-foreground font-semibold text-[14px] shadow-glow inline-flex items-center justify-center gap-2 animate-pulse-soft">
-            <PhoneCall className="h-4 w-4" /> Call Now
+          <button
+            onClick={() => setInquiryOpen(true)}
+            className="flex-1 h-12 rounded-2xl bg-gradient-brand text-primary-foreground font-semibold text-[14px] shadow-glow inline-flex items-center justify-center gap-2"
+          >
+            <Send className="h-4 w-4" /> Send Inquiry
           </button>
           <button
             aria-label="WhatsApp"
@@ -404,9 +469,16 @@ function DoctorDetail() {
           </button>
         </div>
       </div>
+
+      <InquiryDialog
+        open={inquiryOpen}
+        onOpenChange={setInquiryOpen}
+        recipient={doctor.name}
+      />
     </div>
   );
 }
+
 
 /* ───────── Working hours ───────── */
 
