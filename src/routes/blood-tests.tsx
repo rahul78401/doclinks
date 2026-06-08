@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { ArrowLeft, Search, SlidersHorizontal } from "lucide-react";
+import { toast } from "sonner";
 import { LabTestCard } from "@/components/LabTestCard";
 import { LabBookingDialog, type BookingTarget } from "@/components/LabBookingDialog";
 import { LAB_TESTS } from "@/lib/lab-tests";
+import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/blood-tests")({
   component: BloodTestsPage,
@@ -11,6 +13,7 @@ export const Route = createFileRoute("/blood-tests")({
 
 function BloodTestsPage() {
   const navigate = useNavigate();
+  const cart = useCart();
   const [booking, setBooking] = useState<BookingTarget | null>(null);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -63,6 +66,19 @@ function BloodTestsPage() {
             onBook={(test) => {
               setBooking({ kind: "test", id: test.id, name: test.name, price: test.price });
               setOpen(true);
+            }}
+            onAdd={(test) => {
+              cart.add({
+                id: test.id,
+                kind: "test",
+                name: test.name,
+                price: test.price,
+                originalPrice: test.originalPrice,
+                meta: `${test.parameters} ${test.parameters === 1 ? "Parameter" : "Parameters"}`,
+              });
+              toast.success(`${test.name} added to cart`, {
+                action: { label: "View Cart", onClick: () => navigate({ to: "/cart" }) },
+              });
             }}
           />
         ))}
