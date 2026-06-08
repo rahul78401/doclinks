@@ -32,7 +32,7 @@ import {
   Clock3,
 } from "lucide-react";
 import { getHospital } from "@/lib/hospitals";
-import { ReachOutDialog } from "@/components/ReachOutDialog";
+import { InquiryDialog } from "@/components/InquiryDialog";
 
 export const Route = createFileRoute("/hospital/$id")({
   loader: ({ params }) => {
@@ -390,7 +390,7 @@ function HospitalDetail() {
         </div>
       </div>
 
-      <ReachOutDialog
+      <InquiryDialog
         open={reachOpen}
         onOpenChange={setReachOpen}
         recipient={hospital.name}
