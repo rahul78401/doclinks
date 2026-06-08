@@ -98,10 +98,23 @@ const SOCIAL_DEFS = [
   { key: "website", label: "Website", icon: Globe },
 ] as const;
 
+const GALLERY: { src: string; label: string; tall?: boolean }[] = [];
+
 function DoctorDetail() {
   const { doctor } = Route.useLoaderData();
+  const [inquiryOpen, setInquiryOpen] = useState(false);
   const similar = doctors.filter((d) => d.id !== doctor.id);
   const hasFee = typeof doctor.fee === "number";
+
+  const gallery = [
+    { src: clinicImg, label: "Clinic", tall: true },
+    { src: hospital1, label: "Reception" },
+    { src: hospital2, label: "Consultation Room" },
+    { src: hospital3, label: "Doctor at Work", tall: true },
+    { src: labHero, label: "Equipment" },
+    { src: hospital4, label: "Waiting Area" },
+  ];
+
 
   return (
     <div className="min-h-screen bg-background pb-28">
