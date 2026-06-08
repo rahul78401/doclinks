@@ -1,6 +1,7 @@
-import { Bell, ChevronDown, MapPin } from "lucide-react";
+import { ChevronDown, MapPin } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Logo } from "./Logo";
+import { CartButton } from "./CartButton";
 
 export function AppHeader() {
   return (
@@ -10,10 +11,7 @@ export function AppHeader() {
           <Logo className="h-7" />
         </div>
         <div className="flex items-center gap-2">
-          <button className="relative h-10 w-10 grid place-items-center rounded-full bg-surface shadow-card border border-border/60">
-            <Bell className="h-[18px] w-[18px] text-foreground" />
-            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary ring-2 ring-surface" />
-          </button>
+          <CartButton />
           <Link
             to="/account"
             aria-label="Open your account"
