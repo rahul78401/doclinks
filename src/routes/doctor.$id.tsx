@@ -449,8 +449,11 @@ function DoctorDetail() {
       {/* Sticky bottom CTA */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 glass-strong border-t border-border/60 px-4 py-3 pb-[max(env(safe-area-inset-bottom),1rem)]">
         <div className="flex gap-2 max-w-md mx-auto">
-          <button className="flex-1 h-12 rounded-2xl bg-gradient-brand text-primary-foreground font-semibold text-[14px] shadow-glow inline-flex items-center justify-center gap-2 animate-pulse-soft">
-            <PhoneCall className="h-4 w-4" /> Call Now
+          <button
+            onClick={() => setInquiryOpen(true)}
+            className="flex-1 h-12 rounded-2xl bg-gradient-brand text-primary-foreground font-semibold text-[14px] shadow-glow inline-flex items-center justify-center gap-2"
+          >
+            <Send className="h-4 w-4" /> Send Inquiry
           </button>
           <button
             aria-label="WhatsApp"
@@ -466,9 +469,16 @@ function DoctorDetail() {
           </button>
         </div>
       </div>
+
+      <InquiryDialog
+        open={inquiryOpen}
+        onOpenChange={setInquiryOpen}
+        recipient={doctor.name}
+      />
     </div>
   );
 }
+
 
 /* ───────── Working hours ───────── */
 
