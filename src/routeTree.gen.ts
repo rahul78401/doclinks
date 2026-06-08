@@ -9,8 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SavedRouteImport } from './routes/saved'
 import { Route as LegalRouteImport } from './routes/legal'
 import { Route as HealthPackagesRouteImport } from './routes/health-packages'
+import { Route as FollowingRouteImport } from './routes/following'
 import { Route as BloodTestsRouteImport } from './routes/blood-tests'
 import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
@@ -27,6 +29,11 @@ import { Route as TabsExploreRouteImport } from './routes/_tabs.explore'
 import { Route as TabsClinicsRouteImport } from './routes/_tabs.clinics'
 import { Route as TabsAccountRouteImport } from './routes/_tabs.account'
 
+const SavedRoute = SavedRouteImport.update({
+  id: '/saved',
+  path: '/saved',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LegalRoute = LegalRouteImport.update({
   id: '/legal',
   path: '/legal',
@@ -35,6 +42,11 @@ const LegalRoute = LegalRouteImport.update({
 const HealthPackagesRoute = HealthPackagesRouteImport.update({
   id: '/health-packages',
   path: '/health-packages',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FollowingRoute = FollowingRouteImport.update({
+  id: '/following',
+  path: '/following',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BloodTestsRoute = BloodTestsRouteImport.update({
@@ -115,8 +127,10 @@ const TabsAccountRoute = TabsAccountRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
   '/blood-tests': typeof BloodTestsRoute
+  '/following': typeof FollowingRoute
   '/health-packages': typeof HealthPackagesRoute
   '/legal': typeof LegalRoute
+  '/saved': typeof SavedRoute
   '/account': typeof TabsAccountRoute
   '/clinics': typeof TabsClinicsRoute
   '/explore': typeof TabsExploreRoute
@@ -132,8 +146,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/blood-tests': typeof BloodTestsRoute
+  '/following': typeof FollowingRoute
   '/health-packages': typeof HealthPackagesRoute
   '/legal': typeof LegalRoute
+  '/saved': typeof SavedRoute
   '/account': typeof TabsAccountRoute
   '/clinics': typeof TabsClinicsRoute
   '/explore': typeof TabsExploreRoute
@@ -152,8 +168,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tabs': typeof TabsRouteWithChildren
   '/blood-tests': typeof BloodTestsRoute
+  '/following': typeof FollowingRoute
   '/health-packages': typeof HealthPackagesRoute
   '/legal': typeof LegalRoute
+  '/saved': typeof SavedRoute
   '/_tabs/account': typeof TabsAccountRoute
   '/_tabs/clinics': typeof TabsClinicsRoute
   '/_tabs/explore': typeof TabsExploreRoute
@@ -173,8 +191,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/blood-tests'
+    | '/following'
     | '/health-packages'
     | '/legal'
+    | '/saved'
     | '/account'
     | '/clinics'
     | '/explore'
@@ -190,8 +210,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/blood-tests'
+    | '/following'
     | '/health-packages'
     | '/legal'
+    | '/saved'
     | '/account'
     | '/clinics'
     | '/explore'
@@ -209,8 +231,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_tabs'
     | '/blood-tests'
+    | '/following'
     | '/health-packages'
     | '/legal'
+    | '/saved'
     | '/_tabs/account'
     | '/_tabs/clinics'
     | '/_tabs/explore'
@@ -229,8 +253,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
   BloodTestsRoute: typeof BloodTestsRoute
+  FollowingRoute: typeof FollowingRoute
   HealthPackagesRoute: typeof HealthPackagesRoute
   LegalRoute: typeof LegalRoute
+  SavedRoute: typeof SavedRoute
   ArticleSlugRoute: typeof ArticleSlugRoute
   CitySlugRoute: typeof CitySlugRoute
   ClinicIdRoute: typeof ClinicIdRoute
@@ -241,6 +267,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/saved': {
+      id: '/saved'
+      path: '/saved'
+      fullPath: '/saved'
+      preLoaderRoute: typeof SavedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal': {
       id: '/legal'
       path: '/legal'
@@ -253,6 +286,13 @@ declare module '@tanstack/react-router' {
       path: '/health-packages'
       fullPath: '/health-packages'
       preLoaderRoute: typeof HealthPackagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/following': {
+      id: '/following'
+      path: '/following'
+      fullPath: '/following'
+      preLoaderRoute: typeof FollowingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blood-tests': {
@@ -388,8 +428,10 @@ const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
   BloodTestsRoute: BloodTestsRoute,
+  FollowingRoute: FollowingRoute,
   HealthPackagesRoute: HealthPackagesRoute,
   LegalRoute: LegalRoute,
+  SavedRoute: SavedRoute,
   ArticleSlugRoute: ArticleSlugRoute,
   CitySlugRoute: CitySlugRoute,
   ClinicIdRoute: ClinicIdRoute,

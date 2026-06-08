@@ -189,7 +189,7 @@ function SavedSection() {
 
   return (
     <section>
-      <SectionHeading title="Saved & Liked" action={{ label: "View all", to: "/account" }} />
+      <SectionHeading title="Saved & Liked" action={{ label: "View all", to: "/saved" }} />
       <div className="mt-3 -mx-5 px-5 flex gap-3 overflow-x-auto no-scrollbar snap-x snap-mandatory">
         {saved.map((s) => (
           <Link
@@ -242,7 +242,7 @@ function FollowingSection() {
 
   return (
     <section>
-      <SectionHeading title="Following" action={{ label: "Manage", to: "/account" }} />
+      <SectionHeading title="Following" action={{ label: "Manage", to: "/following" }} />
       <div className="mt-3 space-y-2.5">
         {following.map((f) => (
           <div key={f.kind + f.id} className="group rounded-2xl bg-surface border border-border/60 p-3.5 shadow-card transition-all hover:-translate-y-0.5">
