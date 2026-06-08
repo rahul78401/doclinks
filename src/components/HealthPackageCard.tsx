@@ -1,5 +1,6 @@
 import { Check, HeartPulse, ShoppingBag, Sparkles } from "lucide-react";
 import { discountPct, type HealthPackage } from "@/lib/lab-tests";
+import { useCart } from "@/lib/cart";
 
 const TONE: Record<HealthPackage["tone"], string> = {
   teal: "from-[oklch(0.92_0.06_187)] to-[oklch(0.98_0.02_187)]",
@@ -17,6 +18,8 @@ export function HealthPackageCard({
   onBook: (p: HealthPackage) => void;
   onAdd?: (p: HealthPackage) => void;
 }) {
+  const { has } = useCart();
+  const inCart = has("package", pkg.id);
   const off = discountPct(pkg.price, pkg.originalPrice);
   return (
     <div className="relative rounded-3xl bg-surface border border-border/60 shadow-float overflow-hidden">
@@ -76,9 +79,15 @@ export function HealthPackageCard({
           <button
             type="button"
             onClick={() => onAdd?.(pkg)}
-            className="h-10 inline-flex items-center justify-center gap-1.5 px-3 rounded-full bg-surface border border-border text-foreground text-[12.5px] font-semibold active:scale-[0.98] transition"
+            disabled={inCart}
+            className={`h-10 inline-flex items-center justify-center gap-1.5 px-3 rounded-full text-[12.5px] font-semibold active:scale-[0.98] transition border ${
+              inCart
+                ? "bg-success/10 text-success border-success/30"
+                : "bg-surface text-foreground border-border"
+            }`}
           >
-            <ShoppingBag className="h-3.5 w-3.5" /> Add
+            {inCart ? <Check className="h-3.5 w-3.5" /> : <ShoppingBag className="h-3.5 w-3.5" />}
+            {inCart ? "Added" : "Add"}
           </button>
           <button
             type="button"
