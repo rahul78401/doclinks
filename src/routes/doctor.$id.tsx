@@ -1,10 +1,12 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   ArrowLeft,
   Award,
   BadgeCheck,
   Bookmark,
   Calendar,
+  Camera,
   Car,
   ChevronRight,
   Clock,
@@ -18,7 +20,7 @@ import {
   MessageCircle,
   Navigation,
   Phone,
-  PhoneCall,
+  Send,
   Share2,
   ShieldCheck,
   Sparkles,
@@ -30,7 +32,13 @@ import {
   Youtube,
 } from "lucide-react";
 import { doctors, formatFee, formatFeeLong, getDoctor, type DaySchedule } from "@/lib/doctors";
+import { InquiryDialog } from "@/components/InquiryDialog";
 import clinicImg from "@/assets/clinic-1.jpg";
+import hospital1 from "@/assets/hospital-1.jpg";
+import hospital2 from "@/assets/hospital-2.jpg";
+import hospital3 from "@/assets/hospital-3.jpg";
+import hospital4 from "@/assets/hospital-4.jpg";
+import labHero from "@/assets/lab-hero.jpg";
 
 export const Route = createFileRoute("/doctor/$id")({
   loader: ({ params }) => {
