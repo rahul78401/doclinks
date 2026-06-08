@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Search, SlidersHorizontal } from "lucide-react";
+import { toast } from "sonner";
 import { HealthPackageCard } from "@/components/HealthPackageCard";
 import { LabBookingDialog, type BookingTarget } from "@/components/LabBookingDialog";
 import { HEALTH_PACKAGES } from "@/lib/lab-tests";
+import { useCart } from "@/lib/cart";
 
 export const Route = createFileRoute("/health-packages")({
   component: HealthPackagesPage,
@@ -11,6 +13,7 @@ export const Route = createFileRoute("/health-packages")({
 
 function HealthPackagesPage() {
   const navigate = useNavigate();
+  const cart = useCart();
   const [booking, setBooking] = useState<BookingTarget | null>(null);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -69,6 +72,19 @@ function HealthPackagesPage() {
                 tests: pkg.testCount,
               });
               setOpen(true);
+            }}
+            onAdd={(pkg) => {
+              cart.add({
+                id: pkg.id,
+                kind: "package",
+                name: pkg.name,
+                price: pkg.price,
+                originalPrice: pkg.originalPrice,
+                meta: `${pkg.testCount} Tests`,
+              });
+              toast.success(`${pkg.name} added to cart`, {
+                action: { label: "View Cart", onClick: () => navigate({ to: "/cart" }) },
+              });
             }}
           />
         ))}

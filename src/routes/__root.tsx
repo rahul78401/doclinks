@@ -11,6 +11,8 @@ import {
 import appCss from "../styles.css?url";
 import { DesktopNav } from "@/components/DesktopNav";
 import { DesktopFooter } from "@/components/DesktopFooter";
+import { CartProvider } from "@/lib/cart";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -119,12 +121,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <DesktopNav />
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <div className="lg:max-w-7xl lg:mx-auto lg:px-8 lg:py-8">
-        <Outlet />
-      </div>
-      <DesktopFooter />
+      <CartProvider>
+        <DesktopNav />
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <div className="lg:max-w-7xl lg:mx-auto lg:px-8 lg:py-8">
+          <Outlet />
+        </div>
+        <DesktopFooter />
+        <Toaster position="top-center" richColors closeButton />
+      </CartProvider>
     </QueryClientProvider>
   );
 }

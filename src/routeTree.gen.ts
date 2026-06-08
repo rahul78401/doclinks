@@ -13,6 +13,8 @@ import { Route as SavedRouteImport } from './routes/saved'
 import { Route as LegalRouteImport } from './routes/legal'
 import { Route as HealthPackagesRouteImport } from './routes/health-packages'
 import { Route as FollowingRouteImport } from './routes/following'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CartRouteImport } from './routes/cart'
 import { Route as BloodTestsRouteImport } from './routes/blood-tests'
 import { Route as TabsRouteImport } from './routes/_tabs'
 import { Route as TabsIndexRouteImport } from './routes/_tabs.index'
@@ -47,6 +49,16 @@ const HealthPackagesRoute = HealthPackagesRouteImport.update({
 const FollowingRoute = FollowingRouteImport.update({
   id: '/following',
   path: '/following',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BloodTestsRoute = BloodTestsRouteImport.update({
@@ -127,6 +139,8 @@ const TabsAccountRoute = TabsAccountRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof TabsIndexRoute
   '/blood-tests': typeof BloodTestsRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/following': typeof FollowingRoute
   '/health-packages': typeof HealthPackagesRoute
   '/legal': typeof LegalRoute
@@ -146,6 +160,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/blood-tests': typeof BloodTestsRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/following': typeof FollowingRoute
   '/health-packages': typeof HealthPackagesRoute
   '/legal': typeof LegalRoute
@@ -168,6 +184,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_tabs': typeof TabsRouteWithChildren
   '/blood-tests': typeof BloodTestsRoute
+  '/cart': typeof CartRoute
+  '/checkout': typeof CheckoutRoute
   '/following': typeof FollowingRoute
   '/health-packages': typeof HealthPackagesRoute
   '/legal': typeof LegalRoute
@@ -191,6 +209,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/blood-tests'
+    | '/cart'
+    | '/checkout'
     | '/following'
     | '/health-packages'
     | '/legal'
@@ -210,6 +230,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/blood-tests'
+    | '/cart'
+    | '/checkout'
     | '/following'
     | '/health-packages'
     | '/legal'
@@ -231,6 +253,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_tabs'
     | '/blood-tests'
+    | '/cart'
+    | '/checkout'
     | '/following'
     | '/health-packages'
     | '/legal'
@@ -253,6 +277,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   TabsRoute: typeof TabsRouteWithChildren
   BloodTestsRoute: typeof BloodTestsRoute
+  CartRoute: typeof CartRoute
+  CheckoutRoute: typeof CheckoutRoute
   FollowingRoute: typeof FollowingRoute
   HealthPackagesRoute: typeof HealthPackagesRoute
   LegalRoute: typeof LegalRoute
@@ -293,6 +319,20 @@ declare module '@tanstack/react-router' {
       path: '/following'
       fullPath: '/following'
       preLoaderRoute: typeof FollowingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blood-tests': {
@@ -428,6 +468,8 @@ const TabsRouteWithChildren = TabsRoute._addFileChildren(TabsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   TabsRoute: TabsRouteWithChildren,
   BloodTestsRoute: BloodTestsRoute,
+  CartRoute: CartRoute,
+  CheckoutRoute: CheckoutRoute,
   FollowingRoute: FollowingRoute,
   HealthPackagesRoute: HealthPackagesRoute,
   LegalRoute: LegalRoute,

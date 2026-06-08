@@ -1,6 +1,7 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Bell, Search, MapPin, ChevronDown } from "lucide-react";
+import { Search, MapPin, ChevronDown } from "lucide-react";
 import { Logo } from "./Logo";
+import { CartButton } from "./CartButton";
 
 const links = [
   { to: "/", label: "Home" },
@@ -59,10 +60,7 @@ export function DesktopNav() {
             <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
           </button>
 
-          <button className="relative h-10 w-10 grid place-items-center rounded-full bg-surface border border-border/60 hover:bg-muted/60 transition">
-            <Bell className="h-[18px] w-[18px] text-foreground" />
-            <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary ring-2 ring-surface" />
-          </button>
+          <CartButton variant="desktop" />
 
           <Link
             to="/account"
